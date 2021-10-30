@@ -4,9 +4,18 @@ import bg.sofia.uni.fmi.mjt.spotify.library.Library;
 import bg.sofia.uni.fmi.mjt.spotify.playable.Playable;
 
 public abstract class Account {
+    private String email;
     private Library library;
+
+    protected int totalListenedContent;
     private double totalListenTime;
 
+
+    public Account(String email, Library library) {
+        this.email = email;
+        this.library = library;
+        totalListenTime = 0;
+    }
     /**
      * Returns the number of ads listened to.
      * - Free accounts get one ad after every 5 pieces of content played
@@ -26,7 +35,9 @@ public abstract class Account {
      * @param playable
      */
     public void listen(Playable playable) {
-        // TODO: add implementation here
+        playable.play();
+        totalListenTime += playable.getDuration();
+        this.totalListenedContent++;
     }
 
     /**
