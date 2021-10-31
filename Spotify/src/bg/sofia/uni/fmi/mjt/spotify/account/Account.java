@@ -3,6 +3,8 @@ package bg.sofia.uni.fmi.mjt.spotify.account;
 import bg.sofia.uni.fmi.mjt.spotify.library.Library;
 import bg.sofia.uni.fmi.mjt.spotify.playable.Playable;
 
+import java.util.Objects;
+
 public abstract class Account {
     private String email;
     private Library library;
@@ -16,6 +18,11 @@ public abstract class Account {
         this.library = library;
         totalListenTime = 0;
     }
+
+    public String getEmail() {
+        return email;
+    }
+
     /**
      * Returns the number of ads listened to.
      * - Free accounts get one ad after every 5 pieces of content played
@@ -54,4 +61,16 @@ public abstract class Account {
         return totalListenTime;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Account)) return false;
+        Account account = (Account) o;
+        return email.equals(account.email);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(email);
+    }
 }
