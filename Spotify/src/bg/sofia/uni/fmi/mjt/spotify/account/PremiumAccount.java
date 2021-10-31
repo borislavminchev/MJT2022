@@ -17,6 +17,6 @@ public class PremiumAccount extends Account {
 
     @Override
     public AccountType getType() {
-        return null;
+        return AccountType.PREMIUM;
     }
 }
