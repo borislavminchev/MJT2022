@@ -6,10 +6,9 @@ import bg.sofia.uni.fmi.mjt.spotify.playable.Playable;
 import java.util.Objects;
 
 public abstract class Account {
-    private String email;
-    private Library library;
-
     protected int totalListenedContent;
+    private final String email;
+    private final Library library;
     private double totalListenTime;
 
 

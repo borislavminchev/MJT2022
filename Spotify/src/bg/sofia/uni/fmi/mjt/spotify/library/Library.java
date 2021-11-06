@@ -2,8 +2,8 @@ package bg.sofia.uni.fmi.mjt.spotify.library;
 
 import bg.sofia.uni.fmi.mjt.spotify.exceptions.EmptyLibraryException;
 import bg.sofia.uni.fmi.mjt.spotify.exceptions.LibraryCapacityExceededException;
-import bg.sofia.uni.fmi.mjt.spotify.playlist.Playlist;
 import bg.sofia.uni.fmi.mjt.spotify.exceptions.PlaylistNotFoundException;
+import bg.sofia.uni.fmi.mjt.spotify.playlist.Playlist;
 
 public interface Library {
 
@@ -17,8 +17,8 @@ public interface Library {
     /**
      * Removes the playlist with the given name from the library.
      *
-     * @throws IllegalArgumentException if the given playlist name matches the default "Liked Content" playlist name.
-     * @throws EmptyLibraryException if the library is empty.
+     * @throws IllegalArgumentException  if the given playlist name matches the default "Liked Content" playlist name.
+     * @throws EmptyLibraryException     if the library is empty.
      * @throws PlaylistNotFoundException if the playlist with the given name is not present in the library.
      */
     void remove(String name) throws EmptyLibraryException, PlaylistNotFoundException;

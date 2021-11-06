@@ -1,14 +1,11 @@
 package bg.sofia.uni.fmi.mjt.spotify.playable;
 
-import bg.sofia.uni.fmi.mjt.spotify.playable.Playable;
-
 public class Video implements Playable {
-    private String title;
-    private String artist;
-    private int year;
-    private double duration;
-
     private static int totalPlays = 0;
+    private final String title;
+    private final String artist;
+    private final int year;
+    private final double duration;
 
     public Video(String title, String artist, int year, double duration) {
         this.title = title;
@@ -20,7 +17,7 @@ public class Video implements Playable {
     @Override
     public String play() {
         totalPlays++;
-        return "Currently playing" + "VIDEO"  + "content: " + title + " - " + artist;
+        return "Currently playing" + "VIDEO" + "content: " + title + " - " + artist;
     }
 
     @Override

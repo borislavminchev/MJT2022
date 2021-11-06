@@ -8,12 +8,12 @@ import bg.sofia.uni.fmi.mjt.spotify.exceptions.PlaylistCapacityExceededException
 import bg.sofia.uni.fmi.mjt.spotify.exceptions.StreamingServiceException;
 import bg.sofia.uni.fmi.mjt.spotify.playable.Playable;
 
-public class Spotify implements StreamingService{
+public class Spotify implements StreamingService {
 
-    private Account[] registeredAccounts;
-    private Playable[] playableContent;
+    private final Account[] registeredAccounts;
+    private final Playable[] playableContent;
 
-    public Spotify(Account[] accounts, Playable[] playableContent){
+    public Spotify(Account[] accounts, Playable[] playableContent) {
         this.registeredAccounts = accounts;
         this.playableContent = playableContent;
     }
@@ -24,7 +24,7 @@ public class Spotify implements StreamingService{
             throw new IllegalArgumentException("Invalid argument was passed to method play");
         }
 
-        if(!isAccountInPlatform(account)) {
+        if (!isAccountInPlatform(account)) {
             throw new AccountNotFoundException("Account with username: " + account.getEmail() + "was not registered in the platform");
         }
 
@@ -36,7 +36,7 @@ public class Spotify implements StreamingService{
         if (account == null || title == null || title.isEmpty()) {
             throw new IllegalArgumentException("Invalid argument was passed to method like");
         }
-        if(!isAccountInPlatform(account)) {
+        if (!isAccountInPlatform(account)) {
             throw new AccountNotFoundException("Account with username: " + account.getEmail() + "was not registered in the platform");
         }
 
@@ -50,21 +50,21 @@ public class Spotify implements StreamingService{
     @Override
     public Playable findByTitle(String title) throws PlayableNotFoundException {
         for (int i = 0; i < this.playableContent.length; i++) {
-            if(this.playableContent[i].getTitle().equals(title)) {
+            if (this.playableContent[i].getTitle().equals(title)) {
                 return this.playableContent[i];
             }
         }
 
-       throw new PlayableNotFoundException("Playable with title: " + title + " was not registered in the platform");
+        throw new PlayableNotFoundException("Playable with title: " + title + " was not registered in the platform");
     }
 
     @Override
     public Playable getMostPlayed() {
         Playable mostPlayed = this.playableContent[0];
         for (int i = 1; i < this.playableContent.length; i++) {
-           if(mostPlayed.getTotalPlays() < this.playableContent[i].getTotalPlays()) {
-               mostPlayed = this.playableContent[i];
-           }
+            if (mostPlayed.getTotalPlays() < this.playableContent[i].getTotalPlays()) {
+                mostPlayed = this.playableContent[i];
+            }
         }
         return mostPlayed;
     }
@@ -82,9 +82,9 @@ public class Spotify implements StreamingService{
     public double getTotalPlatformRevenue() {
         double totalRevenue = 0;
         for (int i = 0; i < this.registeredAccounts.length; i++) {
-            if(this.registeredAccounts[i].getType() == AccountType.FREE) {
+            if (this.registeredAccounts[i].getType() == AccountType.FREE) {
                 totalRevenue += this.registeredAccounts[i].getAdsListenedTo() * 0.1;
-            }else if (this.registeredAccounts[i].getType() == AccountType.PREMIUM) {
+            } else if (this.registeredAccounts[i].getType() == AccountType.PREMIUM) {
                 totalRevenue += 25.0;
             }
         }
@@ -93,8 +93,8 @@ public class Spotify implements StreamingService{
 
     public boolean isAccountInPlatform(Account account) {
         for (int i = 0; i < this.registeredAccounts.length; i++) {
-            if(this.registeredAccounts[i].equals(account)){
-               return true;
+            if (this.registeredAccounts[i].equals(account)) {
+                return true;
             }
         }
 
