@@ -23,4 +23,5 @@ public class Crypto implements Asset {
     public AssetType getType() {
         return AssetType.CRYPTO;
     }
+
 }

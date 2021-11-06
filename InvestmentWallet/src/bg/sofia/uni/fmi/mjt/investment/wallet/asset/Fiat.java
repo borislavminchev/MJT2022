@@ -23,4 +23,5 @@ public class Fiat implements Asset {
     public AssetType getType() {
         return AssetType.FIAT;
     }
+
 }

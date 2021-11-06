@@ -23,4 +23,5 @@ public class Stock implements Asset {
     public AssetType getType() {
         return AssetType.STOCK;
     }
+
 }

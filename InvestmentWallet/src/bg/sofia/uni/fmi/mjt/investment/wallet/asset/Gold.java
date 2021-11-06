@@ -23,4 +23,5 @@ public class Gold implements Asset {
     public AssetType getType() {
         return AssetType.GOLD;
     }
+
 }
