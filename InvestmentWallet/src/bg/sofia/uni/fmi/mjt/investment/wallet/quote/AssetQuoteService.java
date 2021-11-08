@@ -11,6 +11,7 @@ public class AssetQuoteService implements QuoteService {
             case FIAT -> new Quote(1.08, 1);
             case GOLD -> new Quote(506, 500);
             case STOCK -> new Quote(42, 38);
+            default -> null;
         };
     }
 }
