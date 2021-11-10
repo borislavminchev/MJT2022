@@ -12,19 +12,23 @@ import bg.sofia.uni.fmi.mjt.investment.wallet.quote.Quote;
 import bg.sofia.uni.fmi.mjt.investment.wallet.quote.QuoteService;
 
 import java.time.LocalDateTime;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 public class InvestmentWallet implements Wallet {
     private final QuoteService quoteService;
     private final Map<Asset, Integer> ownedAssets;
+    private final Set<Acquisition> acquisitions;
     private double cashInWallet;
 
     public InvestmentWallet(QuoteService quoteService) {
         this.quoteService = quoteService;
         this.ownedAssets = new HashMap<>();
+        this.acquisitions = new TreeSet<>(new Comparator<Acquisition>() {
+            @Override
+            public int compare(Acquisition o1, Acquisition o2) {
+                return -Double.compare(o1.getPrice(), o2.getPrice());
+            }
+        });
         this.cashInWallet = 0;
     }
 
@@ -78,7 +82,9 @@ public class InvestmentWallet implements Wallet {
         }
         this.cashInWallet -= quantity * quote.askPrice();
 
-        return new DefaultAcquisition(quote.askPrice(), LocalDateTime.now(), quantity, asset);
+        Acquisition currentAcquisition = new DefaultAcquisition(quote.askPrice(), LocalDateTime.now(), quantity, asset);
+        this.acquisitions.add(currentAcquisition);
+        return currentAcquisition;
     }
 
     @Override
@@ -146,11 +152,18 @@ public class InvestmentWallet implements Wallet {
 
     @Override
     public Collection<Acquisition> getAllAcquisitions() {
-        return null;
+        return Collections.unmodifiableSet(this.acquisitions);
     }
 
     @Override
     public Set<Acquisition> getLastNAcquisitions(int n) {
-        return null;
+        if (this.acquisitions.size() <= n) {
+            return Collections.unmodifiableSet(this.acquisitions);
+        }
+        Set<Acquisition> topN = new TreeSet<>();
+        for (int i = 0; i < n; i++) {
+            topN.add((Acquisition) this.acquisitions.toArray()[i]);
+        }
+        return Collections.unmodifiableSet(topN);
     }
 }

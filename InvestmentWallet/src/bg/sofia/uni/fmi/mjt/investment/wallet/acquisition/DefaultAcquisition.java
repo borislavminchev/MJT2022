@@ -36,4 +36,5 @@ public class DefaultAcquisition implements Acquisition {
     public Asset getAsset() {
         return this.asset;
     }
+
 }

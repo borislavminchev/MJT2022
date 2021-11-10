@@ -11,11 +11,11 @@ public abstract class AbstractAsset implements Asset {
 
     @Override
     public String getId() {
-        return null;
+        return this.id;
     }
 
     @Override
     public String getName() {
-        return null;
+        return this.name;
     }
 }

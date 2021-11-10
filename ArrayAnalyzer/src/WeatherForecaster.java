@@ -1,7 +1,3 @@
-package com.brislavmm;
-
-import java.util.Arrays;
-
 public class WeatherForecaster {
     public static int[] getsWarmerIn(int[] temperatures) {
         int[] results = new int[temperatures.length];
@@ -18,8 +14,5 @@ public class WeatherForecaster {
         }
 
         return results;
-    }
-    public static void main(String[] args) {
-        System.out.println(Arrays.toString(WeatherForecaster.getsWarmerIn(new int[] {3,6,9})));
     }
 }
