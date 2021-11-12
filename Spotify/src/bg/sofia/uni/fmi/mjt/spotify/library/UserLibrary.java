@@ -13,7 +13,8 @@ public class UserLibrary implements Library {
 
     public UserLibrary() {
         currentSize = 1;
-        playlistsInLibrary[0] = new UserPlaylist("Liked");
+        this.playlistsInLibrary = new Playlist[MAX_SIZE];
+        playlistsInLibrary[0] = new UserPlaylist("Liked Content");
     }
 
     @Override
@@ -22,7 +23,7 @@ public class UserLibrary implements Library {
             throw new IllegalArgumentException("Cannot add NULL as value in Library.");
         }
 
-        if (!playlist.getName().equals("Liked")) {
+        if (!playlist.getName().equals("Liked Content")) {
             if (currentSize >= playlistsInLibrary.length) {
                 throw new LibraryCapacityExceededException("Capacity Exceeded. Cannot add more playlists. Max size is " + MAX_SIZE);
             }
@@ -38,7 +39,7 @@ public class UserLibrary implements Library {
             throw new IllegalArgumentException("Name cannot be null.");
         }
 
-        if (!name.equals("Liked")) {
+        if (!name.equals("Liked Content")) {
             if (this.playlistsInLibrary.length == 1) {
                 throw new EmptyLibraryException("Library is empty. Cannot remove more playlists.");
             }
@@ -61,7 +62,10 @@ public class UserLibrary implements Library {
             if (!isFound) {
                 throw new PlaylistNotFoundException("Playlist with name: " + name + "was not found");
             }
+        }else {
+            throw new IllegalArgumentException("Cannot remove default playlist");
         }
+
     }
 
     private void removeLastPlaylist() {

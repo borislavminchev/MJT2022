@@ -7,8 +7,10 @@ public class Audio extends AbstractPlayable {
 
     @Override
     public String play() {
-        super.totalPlays++;
+        this.totalPlays++;
         return "Currently playing" + "AUDIO" + "content: " + "<content_name>";
     }
+
+
 
 }

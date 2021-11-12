@@ -5,8 +5,8 @@ import bg.sofia.uni.fmi.mjt.rentalservice.location.Location;
 public class Scooter extends AbstractVehicle {
     private static final double PRICE_PER_MINUTE = 0.3;
 
-    public Scooter(Location location) {
-        super(location);
+    public Scooter(String id, Location location) {
+        super(id, location);
         this.type = "SCOOTER";
     }
 

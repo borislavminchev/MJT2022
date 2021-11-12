@@ -49,6 +49,10 @@ public class Spotify implements StreamingService {
 
     @Override
     public Playable findByTitle(String title) throws PlayableNotFoundException {
+        if (title == null || title.isEmpty()) {
+            throw new IllegalArgumentException("Title cannot be null");
+        }
+
         for (int i = 0; i < this.playableContent.length; i++) {
             if (this.playableContent[i].getTitle().equals(title)) {
                 return this.playableContent[i];
@@ -60,9 +64,11 @@ public class Spotify implements StreamingService {
 
     @Override
     public Playable getMostPlayed() {
-        Playable mostPlayed = this.playableContent[0];
-        for (int i = 1; i < this.playableContent.length; i++) {
-            if (mostPlayed.getTotalPlays() < this.playableContent[i].getTotalPlays()) {
+        Playable mostPlayed = null;
+        for (int i = 0; i < this.playableContent.length; i++) {
+            if (this.playableContent[i] != null &&
+                    this.playableContent[i].getTotalPlays() != 0 &&
+                    (mostPlayed == null || mostPlayed.getTotalPlays() < this.playableContent[i].getTotalPlays())) {
                 mostPlayed = this.playableContent[i];
             }
         }
@@ -73,7 +79,7 @@ public class Spotify implements StreamingService {
     public double getTotalListenTime() {
         double total = 0;
         for (int i = 0; i < this.playableContent.length; i++) {
-            total += this.playableContent[i].getDuration();
+            total += (this.playableContent[i].getDuration() * this.playableContent[i].getTotalPlays());
         }
         return total;
     }

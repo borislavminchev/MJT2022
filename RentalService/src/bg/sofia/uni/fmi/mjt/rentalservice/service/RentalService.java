@@ -14,11 +14,6 @@ public class RentalService implements RentalServiceAPI {
         this.allVehicles = allVehicles;
     }
 
-    private static double getDistance(Location location1, Location location2) {
-        return Math.sqrt(Math.pow(location1.getX() - location2.getX(), 2) +
-                Math.pow(location1.getY() - location2.getY(), 2));
-    }
-
     @Override
     public double rentUntil(Vehicle vehicle, LocalDateTime until) {
         if (vehicle == null ||
@@ -29,7 +24,7 @@ public class RentalService implements RentalServiceAPI {
         }
 
         vehicle.setEndOfReservationPeriod(until);
-        long diff = LocalDateTime.now().until(vehicle.getEndOfReservationPeriod(), ChronoUnit.MINUTES);
+        long diff = LocalDateTime.now().until(until, ChronoUnit.MINUTES) + 1;
         return diff * vehicle.getPricePerMinute();
     }
 
@@ -59,5 +54,10 @@ public class RentalService implements RentalServiceAPI {
             }
         }
         return false;
+    }
+
+    private static double getDistance(Location location1, Location location2) {
+        return Math.sqrt(Math.pow(location1.getX() - location2.getX(), 2) +
+                Math.pow(location1.getY() - location2.getY(), 2));
     }
 }

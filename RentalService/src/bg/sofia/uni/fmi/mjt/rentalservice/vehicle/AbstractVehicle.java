@@ -13,10 +13,16 @@ public abstract class AbstractVehicle implements Vehicle {
     protected String type;
     private LocalDateTime endOfReservationPeriod;
 
-    public AbstractVehicle(Location location) {
-        this.id = UUID.randomUUID().toString();
+//    public AbstractVehicle(Location location) {
+//        this.id = UUID.randomUUID().toString();
+//        this.location = location;
+//        this.endOfReservationPeriod = LocalDateTime.now();
+//    }
+
+
+    public AbstractVehicle(String id, Location location) {
+        this.id = id;
         this.location = location;
-        this.endOfReservationPeriod = LocalDateTime.now();
     }
 
     @Override

@@ -8,7 +8,7 @@ public class Video extends AbstractPlayable {
 
     @Override
     public String play() {
-        super.totalPlays++;
+        this.totalPlays++;
         return "Currently playing" + "VIDEO" + "content: " + super.getTitle() + " - " + super.getArtist();
     }
 
