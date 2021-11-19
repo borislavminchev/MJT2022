@@ -36,6 +36,9 @@ public class DefaultPackingService<T extends Priceable> implements PackingServic
 
     @Override
     public Collection<T> unpack(Gift<T> gift) {
+        if (gift == null) {
+            throw new IllegalArgumentException("Gift cannot be null");
+        }
         return gift.getItems();
     }
 }

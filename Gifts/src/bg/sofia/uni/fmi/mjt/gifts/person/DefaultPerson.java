@@ -1,5 +1,6 @@
 package bg.sofia.uni.fmi.mjt.gifts.person;
 
+import bg.sofia.uni.fmi.mjt.gifts.exception.WrongReceiverException;
 import bg.sofia.uni.fmi.mjt.gifts.gift.Gift;
 
 import java.util.*;
@@ -16,9 +17,11 @@ public class DefaultPerson<I> implements Person<I> {
     @Override
     public Collection<Gift<?>> getNMostExpensiveReceivedGifts(int n) {
         if (n == 0) {
-            return Collections.unmodifiableCollection(new ArrayList<>());
-        } else if (n <= this.receivedGifts.size()) {
-            return Collections.unmodifiableCollection(this.receivedGifts);
+            return List.copyOf(new ArrayList<>());
+        } else if (n < 0) {
+            throw new IllegalArgumentException("N cannot be negative");
+        } else if (n >= this.receivedGifts.size()) {
+            return List.copyOf(this.receivedGifts);
         }
 
         List<Gift<?>> nMostExpensive = new ArrayList<>();
@@ -33,7 +36,7 @@ public class DefaultPerson<I> implements Person<I> {
         for (int i = 0; i < n; i++) {
             nMostExpensive.add((Gift<?>) this.receivedGifts.toArray()[i]);
         }
-        return Collections.unmodifiableCollection(nMostExpensive);
+        return List.copyOf(nMostExpensive);
     }
 
     @Override
@@ -46,7 +49,7 @@ public class DefaultPerson<I> implements Person<I> {
             }
         }
 
-        return Collections.unmodifiableCollection(giftsByPerson);
+        return List.copyOf(giftsByPerson);
     }
 
     @Override
@@ -58,6 +61,9 @@ public class DefaultPerson<I> implements Person<I> {
     public void receiveGift(Gift<?> gift) {
         if (gift == null) {
             throw new IllegalArgumentException("Gift ti be received is null");
+        }
+        if (!gift.getReceiver().equals(this)) {
+            throw new WrongReceiverException("Receiver of gift mismatch");
         }
 
         this.receivedGifts.add(gift);

@@ -5,6 +5,7 @@ import com.sun.source.tree.IfTree;
 
 import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
 
 public class BirthdayGift<T extends Priceable> implements Gift<T> {
     Person<?> sender;
@@ -51,7 +52,7 @@ public class BirthdayGift<T extends Priceable> implements Gift<T> {
 
     @Override
     public Collection<T> getItems() {
-        return Collections.unmodifiableCollection(this.items);
+        return List.copyOf(this.items);
     }
 
     @Override
