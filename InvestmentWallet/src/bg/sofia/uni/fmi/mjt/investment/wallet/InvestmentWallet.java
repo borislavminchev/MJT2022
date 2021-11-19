@@ -100,7 +100,7 @@ public class InvestmentWallet implements Wallet {
             throw new UnknownAssetException("No defined quote for asset: " + asset.getName());
         }
 
-        if (this.ownedAssets.get(asset) < quantity) {
+        if (!this.ownedAssets.containsKey(asset) || this.ownedAssets.get(asset) < quantity) {
             throw new InsufficientResourcesException("Not enough quantity of asset: " + asset.getType().name());
         }
 
@@ -111,7 +111,7 @@ public class InvestmentWallet implements Wallet {
         this.ownedAssets.put(asset, this.ownedAssets.get(asset) - quantity);
         this.cashInWallet += quantity * quote.bidPrice();
 
-        return this.cashInWallet;
+        return quantity * quote.bidPrice();
     }
 
     @Override
@@ -126,6 +126,9 @@ public class InvestmentWallet implements Wallet {
 
     @Override
     public double getValuation(Asset asset) throws UnknownAssetException {
+        if (asset == null) {
+            throw new IllegalArgumentException("asset cannot be null");
+        }
         double price = quoteService.getQuote(asset).bidPrice();
 
         if (this.ownedAssets.get(asset) == null) {
@@ -152,18 +155,22 @@ public class InvestmentWallet implements Wallet {
 
     @Override
     public Collection<Acquisition> getAllAcquisitions() {
-        return Collections.unmodifiableSet(this.acquisitions);
+        return Set.copyOf(this.acquisitions);
     }
 
     @Override
     public Set<Acquisition> getLastNAcquisitions(int n) {
+        if (n < 0) {
+            throw new IllegalArgumentException("N cannot be negative");
+        }
+
         if (this.acquisitions.size() <= n) {
             return Collections.unmodifiableSet(this.acquisitions);
         }
-        Set<Acquisition> topN = new TreeSet<>();
+        Set<Acquisition> topN = new HashSet<>();
         for (int i = 0; i < n; i++) {
             topN.add((Acquisition) this.acquisitions.toArray()[i]);
         }
-        return Collections.unmodifiableSet(topN);
+        return Set.copyOf(topN);
     }
 }
