@@ -1,34 +1,32 @@
 package bg.sofia.uni.fmi.mjt.twitch.content.stream;
 
-import bg.sofia.uni.fmi.mjt.twitch.content.Content;
+import bg.sofia.uni.fmi.mjt.twitch.content.Category;
+import bg.sofia.uni.fmi.mjt.twitch.content.ContentBase;
 import bg.sofia.uni.fmi.mjt.twitch.content.Metadata;
 import bg.sofia.uni.fmi.mjt.twitch.user.User;
+import bg.sofia.uni.fmi.mjt.twitch.user.UserStatus;
 
 import java.time.Duration;
 
-public class Stream implements Content {
-    @Override
-    public Metadata getMetadata() {
-        return null;
+public class Stream extends ContentBase {
+
+    public Stream(String title, Category category, User user, Duration duration) {
+        super(title, category, user, duration);
+        super.numberOfViews = 0;
     }
 
-    @Override
-    public Duration getDuration() {
-        return null;
-    }
-
-    @Override
-    public void startWatching(User user) {
-
+    public Stream(Metadata metadata, Duration duration) {
+        super(metadata, duration);
+        super.numberOfViews = 0;
     }
 
     @Override
     public void stopWatching(User user) {
+        if (user == null) {
+            throw new IllegalArgumentException("User cannot be null");
+        }
 
-    }
-
-    @Override
-    public int getNumberOfViews() {
-        return 0;
+        user.setStatus(UserStatus.ONLINE);
+        this.numberOfViews--;
     }
 }
