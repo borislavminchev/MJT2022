@@ -6,6 +6,7 @@ import bg.sofia.uni.fmi.mjt.twitch.content.stream.Stream;
 import bg.sofia.uni.fmi.mjt.twitch.content.video.Video;
 import bg.sofia.uni.fmi.mjt.twitch.user.User;
 import bg.sofia.uni.fmi.mjt.twitch.user.UserNotFoundException;
+import bg.sofia.uni.fmi.mjt.twitch.user.UserStatus;
 import bg.sofia.uni.fmi.mjt.twitch.user.UserStreamingException;
 import bg.sofia.uni.fmi.mjt.twitch.user.service.UserService;
 
@@ -19,18 +20,62 @@ public class Twitch implements StreamingPlatform {
     }
 
     @Override
-    public Stream startStream(String username, String title, Category category) throws UserNotFoundException, UserStreamingException {
-        return null;
+    public Stream startStream(String username, String title, Category category)
+            throws UserNotFoundException, UserStreamingException {
+
+        if (title == null || title.isEmpty() || category == null) {
+            throw new IllegalArgumentException("Invalid arguments passed");
+        }
+
+        User user = getUserByUsername(username);
+        if (user == null) {
+            throw new UserNotFoundException("User was not found");
+        }
+
+        if (user.getStatus() == UserStatus.BROADCASTING) {
+            throw new UserStreamingException("User is currently streaming");
+        }
+
+        user.setStatus(UserStatus.BROADCASTING);
+
+        return new Stream(title, category, user);
     }
 
     @Override
     public Video endStream(String username, Stream stream) throws UserNotFoundException, UserStreamingException {
-        return null;
+        if (stream == null) {
+            throw new IllegalArgumentException("Stream cannot be null");
+        }
+
+        User user = getUserByUsername(username);
+        if (user == null) {
+            throw new UserNotFoundException("User was not found");
+        }
+
+        if (user.getStatus() != UserStatus.BROADCASTING) {
+            throw new UserStreamingException("User is currently not streaming");
+        }
+
+        user.setStatus(UserStatus.ONLINE);
+        return new Video(stream.getMetadata(), stream.getDuration());
     }
 
     @Override
     public void watch(String username, Content content) throws UserNotFoundException, UserStreamingException {
+        if (content == null) {
+            throw new IllegalArgumentException("Content cannot be null");
+        }
 
+        User user = getUserByUsername(username);
+        if (user == null) {
+            throw new UserNotFoundException("User was not found");
+        }
+
+        if (user.getStatus() == UserStatus.BROADCASTING) {
+            throw new UserStreamingException("User is currently streaming. Cannot watch another content");
+        }
+
+        content.startWatching(user);
     }
 
     @Override
