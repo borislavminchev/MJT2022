@@ -7,17 +7,19 @@ import bg.sofia.uni.fmi.mjt.twitch.user.User;
 import bg.sofia.uni.fmi.mjt.twitch.user.UserStatus;
 
 import java.time.Duration;
+import java.time.LocalDateTime;
 
 public class Stream extends ContentBase {
 
-    public Stream(String title, Category category, User user, Duration duration) {
-        super(title, category, user, duration);
-        super.numberOfViews = 0;
+    private LocalDateTime startTime;
+
+    public Stream(String title, Category category, User user) {
+        super(title, category, user);
+        this.startTime = LocalDateTime.now();
     }
 
     public Stream(Metadata metadata, Duration duration) {
         super(metadata, duration);
-        super.numberOfViews = 0;
     }
 
     @Override
@@ -28,5 +30,10 @@ public class Stream extends ContentBase {
 
         user.setStatus(UserStatus.ONLINE);
         this.numberOfViews--;
+    }
+
+    @Override
+    public Duration getDuration() {
+        return Duration.between(this.startTime, LocalDateTime.now());
     }
 }

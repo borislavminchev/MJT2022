@@ -7,7 +7,7 @@ import java.time.Duration;
 
 public abstract class ContentBase implements Content {
     private final Metadata metadata;
-    private final Duration duration;
+    private Duration duration;
     protected int numberOfViews;
 
     public ContentBase(String title, Category category, User user, Duration duration) {
@@ -19,6 +19,18 @@ public abstract class ContentBase implements Content {
     public ContentBase(Metadata metadata, Duration duration) {
         this.metadata = metadata;
         this.duration = duration;
+        this.numberOfViews = 0;
+    }
+
+    public ContentBase(String title, Category category, User user) {
+        this.metadata = new Metadata(title, category, user);
+        this.duration = null;
+        this.numberOfViews = 0;
+    }
+    public ContentBase(Metadata metadata) {
+        this.metadata = metadata;
+        this.duration = null;
+        this.numberOfViews = 0;
     }
 
     @Override
