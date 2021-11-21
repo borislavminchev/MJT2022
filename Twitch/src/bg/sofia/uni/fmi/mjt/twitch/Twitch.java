@@ -10,13 +10,17 @@ import bg.sofia.uni.fmi.mjt.twitch.user.UserStatus;
 import bg.sofia.uni.fmi.mjt.twitch.user.UserStreamingException;
 import bg.sofia.uni.fmi.mjt.twitch.user.service.UserService;
 
-import java.util.List;
+import java.util.*;
 
 public class Twitch implements StreamingPlatform {
     private final UserService userService;
+    private final Set<Content> availableContent;
+    private final UserContentService ownersContent;
 
     Twitch(UserService userService) {
         this.userService = userService;
+        this.availableContent = new LinkedHashSet<>();
+        ownersContent = new UserContentService();
     }
 
     @Override
@@ -38,7 +42,10 @@ public class Twitch implements StreamingPlatform {
 
         user.setStatus(UserStatus.BROADCASTING);
 
-        return new Stream(title, category, user);
+        Stream stream = new Stream(title, category, user);
+        ownersContent.newContent(stream, username);
+        //this.availableContent.add(stream);
+        return stream;
     }
 
     @Override
@@ -57,7 +64,12 @@ public class Twitch implements StreamingPlatform {
         }
 
         user.setStatus(UserStatus.ONLINE);
-        return new Video(stream.getMetadata(), stream.getDuration());
+
+        Video video = new Video(stream.getMetadata(), stream.getDuration());
+        this.ownersContent.removeContent(stream, username);
+        this.ownersContent.newContent(video, username);
+        //this.availableContent.add(video);
+        return video;
     }
 
     @Override
@@ -80,22 +92,39 @@ public class Twitch implements StreamingPlatform {
 
     @Override
     public User getMostWatchedStreamer() {
-        return null;
+        return this.userService.getUsers()
+                .get(this.ownersContent
+                        .getUsernameByContent(getMostWatchedContent()));
     }
 
     @Override
     public Content getMostWatchedContent() {
-        return null;
+        //Set<Content> allContent = this.ownersContent.getAllContent();
+        return getMostWatched(this.ownersContent.getAllContent());
     }
 
     @Override
     public Content getMostWatchedContentFrom(String username) throws UserNotFoundException {
-        return null;
+        //Set<Content> userContent = this.ownersContent.getContentOfUser(username);
+
+        return getMostWatched(this.ownersContent.getContentOfUser(username));
     }
 
     @Override
     public List<Category> getMostWatchedCategoriesBy(String username) throws UserNotFoundException {
-        return null;
+        List<Content> userContent = List.copyOf(this.ownersContent.getContentOfUser(username));
+        Collections.sort(userContent, Collections.reverseOrder(new Comparator<Content>() {
+            @Override
+            public int compare(Content o1, Content o2) {
+                return Integer.compare(o1.getNumberOfViews(), o2.getNumberOfViews());
+            }
+        }));
+
+        Set<Category> mostWatchedCategory = new LinkedHashSet<>();
+        for (Content content : userContent) {
+            mostWatchedCategory.add(content.getMetadata().category());
+        }
+        return List.copyOf(mostWatchedCategory);
     }
 
     private User getUserByUsername(String username) {
@@ -104,5 +133,16 @@ public class Twitch implements StreamingPlatform {
         }
 
         return this.userService.getUsers().get(username);
+    }
+
+    private Content getMostWatched(Set<Content> contentSet) {
+        Content mostWatched = null;
+
+        for (Content content : contentSet) {
+            if (mostWatched == null || mostWatched.getNumberOfViews() < content.getNumberOfViews()) {
+                mostWatched = content;
+            }
+        }
+        return mostWatched;
     }
 }
