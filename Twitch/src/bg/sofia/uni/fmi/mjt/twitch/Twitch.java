@@ -121,9 +121,14 @@ public class Twitch implements StreamingPlatform {
         }));
 
         Set<Category> mostWatchedCategory = new LinkedHashSet<>();
+
         for (Content content : userContent) {
             mostWatchedCategory.add(content.getMetadata().category());
+            if (mostWatchedCategory.size() == Category.values().length) {
+                break;
+            }
         }
+
         return List.copyOf(mostWatchedCategory);
     }
 
