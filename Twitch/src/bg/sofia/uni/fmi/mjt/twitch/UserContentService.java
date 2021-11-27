@@ -7,9 +7,11 @@ import java.util.*;
 
 public class UserContentService {
     Map<String, Set<Content>> ownersContent;
+    Map<String, List<Content>> watcherContent;
 
     public UserContentService() {
         this.ownersContent = new HashMap<>();
+        this.watcherContent = new HashMap<>();
     }
 
     public void newContent(Content content, String username) {
@@ -17,7 +19,7 @@ public class UserContentService {
             throw new IllegalArgumentException("Arguments cannot be null");
         }
 
-        if (this.ownersContent.containsKey(content)) {
+        if (this.ownersContent.containsKey(username)) {
             this.ownersContent.get(username).add(content);
         } else {
             this.ownersContent.put(username, new LinkedHashSet<>(List.of(content)));
@@ -59,5 +61,29 @@ public class UserContentService {
         }
 
         return Set.copyOf(allContent);
+    }
+
+    public void registerWatch(String username, Content content) {
+        if (content == null || username == null || username.isEmpty()) {
+            throw new IllegalArgumentException("Arguments cannot be null");
+        }
+
+        if (this.watcherContent.containsKey(username)) {
+            this.watcherContent.get(username).add(content);
+        } else {
+            this.watcherContent.put(username, new ArrayList<>(List.of(content)));
+        }
+    }
+
+    public List<Content> getAllWatchedContentBy(String username) throws UserNotFoundException {
+        if (username == null || username.isEmpty()) {
+            throw new IllegalArgumentException("Username cannot be null or empty");
+        }
+
+        if (!this.watcherContent.containsKey(username)) {
+            throw new UserNotFoundException("User with username:" + username + "was not found");
+        }
+
+        return List.copyOf(this.watcherContent.get(username));
     }
 }

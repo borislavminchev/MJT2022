@@ -88,6 +88,7 @@ public class Twitch implements StreamingPlatform {
         }
 
         content.startWatching(user);
+        this.ownersContent.registerWatch(username, content);
     }
 
     @Override
@@ -112,7 +113,7 @@ public class Twitch implements StreamingPlatform {
 
     @Override
     public List<Category> getMostWatchedCategoriesBy(String username) throws UserNotFoundException {
-        List<Content> userContent = List.copyOf(this.ownersContent.getContentOfUser(username));
+        List<Content> userContent = List.copyOf(this.ownersContent.getAllWatchedContentBy(username));
         Collections.sort(userContent, Collections.reverseOrder(new Comparator<Content>() {
             @Override
             public int compare(Content o1, Content o2) {
