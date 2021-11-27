@@ -32,6 +32,15 @@ public abstract class ContentBase implements Content {
         this.duration = null;
         this.numberOfViews = 0;
     }
+    @Override
+    public void startWatching(User user) {
+        if (user == null) {
+            throw new IllegalArgumentException("User cannot be null");
+        }
+
+        user.setStatus(UserStatus.OFFLINE);
+        this.numberOfViews++;
+    }
 
     @Override
     public Metadata getMetadata() {
@@ -41,16 +50,6 @@ public abstract class ContentBase implements Content {
     @Override
     public Duration getDuration() {
         return this.duration;
-    }
-
-    @Override
-    public void startWatching(User user) {
-        if (user == null) {
-            throw new IllegalArgumentException("User cannot be null");
-        }
-
-        user.setStatus(UserStatus.WATCHING);
-        this.numberOfViews++;
     }
 
     @Override

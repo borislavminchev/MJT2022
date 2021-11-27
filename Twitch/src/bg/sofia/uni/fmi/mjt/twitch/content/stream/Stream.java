@@ -28,7 +28,7 @@ public class Stream extends ContentBase {
             throw new IllegalArgumentException("User cannot be null");
         }
 
-        user.setStatus(UserStatus.ONLINE);
+        user.setStatus(UserStatus.OFFLINE);
         this.numberOfViews--;
     }
 

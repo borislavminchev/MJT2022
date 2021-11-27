@@ -36,11 +36,11 @@ public class Twitch implements StreamingPlatform {
             throw new UserNotFoundException("User was not found");
         }
 
-        if (user.getStatus() == UserStatus.BROADCASTING) {
+        if (user.getStatus() == UserStatus.STREAMING) {
             throw new UserStreamingException("User is currently streaming");
         }
 
-        user.setStatus(UserStatus.BROADCASTING);
+        user.setStatus(UserStatus.STREAMING);
 
         Stream stream = new Stream(title, category, user);
         ownersContent.newContent(stream, username);
@@ -59,11 +59,11 @@ public class Twitch implements StreamingPlatform {
             throw new UserNotFoundException("User was not found");
         }
 
-        if (user.getStatus() != UserStatus.BROADCASTING) {
+        if (user.getStatus() != UserStatus.STREAMING) {
             throw new UserStreamingException("User is currently not streaming");
         }
 
-        user.setStatus(UserStatus.ONLINE);
+        user.setStatus(UserStatus.OFFLINE);
 
         Video video = new Video(stream.getMetadata(), stream.getDuration());
         this.ownersContent.removeContent(stream, username);
@@ -83,7 +83,7 @@ public class Twitch implements StreamingPlatform {
             throw new UserNotFoundException("User was not found");
         }
 
-        if (user.getStatus() == UserStatus.BROADCASTING) {
+        if (user.getStatus() == UserStatus.STREAMING) {
             throw new UserStreamingException("User is currently streaming. Cannot watch another content");
         }
 

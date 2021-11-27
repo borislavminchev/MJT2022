@@ -7,8 +7,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class LeastFrequentlyUsedCache<K, V> extends CacheBase<K, V> {
-    private HashMap<K, V> cache;
-    private Map<K, Integer> keyUses;
+    private final HashMap<K, V> cache;
+    private final Map<K, Integer> keyUses;
 
     public LeastFrequentlyUsedCache(Storage<K, V> storage, int capacity) {
         super(storage, capacity);
@@ -35,9 +35,6 @@ public class LeastFrequentlyUsedCache<K, V> extends CacheBase<K, V> {
 
     protected V getFromCache(K key) {
         var val = cache.get(key);
-        if (val == null) {
-            return null;
-        }
 
         return val;
     }
@@ -68,9 +65,10 @@ public class LeastFrequentlyUsedCache<K, V> extends CacheBase<K, V> {
 
         for (K key : keyUses.keySet()) {
             int usageCount = keyUses.get(key);
-            if (usageCount <= minUsageCount)
+            if (usageCount <= minUsageCount) {
                 toBeRemoved = key;
-            minUsageCount = usageCount;
+                minUsageCount = usageCount;
+            }
         }
 
         return toBeRemoved;

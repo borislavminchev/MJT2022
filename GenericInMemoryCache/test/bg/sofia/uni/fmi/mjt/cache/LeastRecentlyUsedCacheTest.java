@@ -15,19 +15,8 @@ class LeastRecentlyUsedCacheTest {
     }
 
     @Test
-    void values() {
-    }
+    void get() {
 
-    @Test
-    void getFromCache() {
-    }
-
-    @Test
-    void put() {
-    }
-
-    @Test
-    void containsKey() {
     }
 
     @Test
