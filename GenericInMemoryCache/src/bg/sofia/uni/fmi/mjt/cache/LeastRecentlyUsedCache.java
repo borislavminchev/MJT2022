@@ -44,6 +44,7 @@ public class LeastRecentlyUsedCache<K, V> extends CacheBase<K, V> {
     protected void evictFromCache() {
         var it = cache.keySet().iterator();
         if (it.hasNext()) {
+            it.next();
             it.remove();
         }
     }

@@ -4,10 +4,10 @@ import bg.sofia.uni.fmi.mjt.cache.exception.ItemNotFound;
 import bg.sofia.uni.fmi.mjt.cache.storage.Storage;
 
 public abstract class CacheBase<K, V> implements Cache<K, V> {
-    private int capacity;
+    private final int capacity;
     private int totalHits;
     private int successfulHits;
-    private Storage<K, V> storage;
+    private final Storage<K, V> storage;
 
     protected CacheBase(Storage<K, V> storage, int capacity) {
         this.storage = storage;
@@ -25,11 +25,11 @@ public abstract class CacheBase<K, V> implements Cache<K, V> {
             throw new IllegalArgumentException();
         }
 
-        totalHits=+1;
+        totalHits += 1;
 
         V returnValue = getFromCache(key);
         if (returnValue != null) {
-            successfulHits=+1;
+            successfulHits += 1;
             return returnValue;
         }
 
@@ -54,6 +54,7 @@ public abstract class CacheBase<K, V> implements Cache<K, V> {
 
     protected void resetHitRate() {
         this.successfulHits = 0;
+        this.totalHits = 0;
     }
 
     abstract V getFromCache(K k);

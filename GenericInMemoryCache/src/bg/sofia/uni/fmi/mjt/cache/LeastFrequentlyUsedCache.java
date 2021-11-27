@@ -34,9 +34,7 @@ public class LeastFrequentlyUsedCache<K, V> extends CacheBase<K, V> {
     }
 
     protected V getFromCache(K key) {
-        var val = cache.get(key);
-
-        return val;
+        return cache.get(key);
     }
 
     protected V put(K key, V value) {
@@ -60,12 +58,12 @@ public class LeastFrequentlyUsedCache<K, V> extends CacheBase<K, V> {
     }
 
     private K getEvictionKey() {
-        int minUsageCount = 1;
+        int minUsageCount = 0;
         K toBeRemoved = null;
 
         for (K key : keyUses.keySet()) {
             int usageCount = keyUses.get(key);
-            if (usageCount <= minUsageCount) {
+            if (minUsageCount == 0 || usageCount <= minUsageCount) {
                 toBeRemoved = key;
                 minUsageCount = usageCount;
             }
