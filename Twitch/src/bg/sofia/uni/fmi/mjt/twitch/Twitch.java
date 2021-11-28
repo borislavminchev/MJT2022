@@ -14,12 +14,10 @@ import java.util.*;
 
 public class Twitch implements StreamingPlatform {
     private final UserService userService;
-    private final Set<Content> availableContent;
     private final UserContentService ownersContent;
 
     Twitch(UserService userService) {
         this.userService = userService;
-        this.availableContent = new LinkedHashSet<>();
         ownersContent = new UserContentService();
     }
 
@@ -44,7 +42,6 @@ public class Twitch implements StreamingPlatform {
 
         Stream stream = new Stream(title, category, user);
         ownersContent.newContent(stream, username);
-        //this.availableContent.add(stream);
         return stream;
     }
 
@@ -68,7 +65,7 @@ public class Twitch implements StreamingPlatform {
         Video video = new Video(stream.getMetadata(), stream.getDuration());
         this.ownersContent.removeContent(stream, username);
         this.ownersContent.newContent(video, username);
-        //this.availableContent.add(video);
+
         return video;
     }
 
@@ -98,21 +95,18 @@ public class Twitch implements StreamingPlatform {
 
     @Override
     public Content getMostWatchedContent() {
-        //Set<Content> allContent = this.ownersContent.getAllContent();
         return getMostWatched(this.ownersContent.getAllContent());
     }
 
     @Override
     public Content getMostWatchedContentFrom(String username) throws UserNotFoundException {
-        //Set<Content> userContent = this.ownersContent.getContentOfUser(username);
-
         return getMostWatched(this.ownersContent.getContentOfUser(username));
     }
 
     @Override
     public List<Category> getMostWatchedCategoriesBy(String username) throws UserNotFoundException {
-        List<Content> userContent = List.copyOf(this.ownersContent.getAllWatchedContentBy(username));
-        Collections.sort(userContent, Collections.reverseOrder(new Comparator<Content>() {
+        List<Content> userContent = new ArrayList<>(List.copyOf(this.ownersContent.getAllWatchedContentBy(username)));
+        Collections.sort(userContent, Collections.reverseOrder(new Comparator<>() {
             @Override
             public int compare(Content o1, Content o2) {
                 return Integer.compare(o1.getNumberOfViews(), o2.getNumberOfViews());
