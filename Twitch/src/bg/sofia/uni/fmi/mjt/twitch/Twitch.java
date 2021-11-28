@@ -93,9 +93,7 @@ public class Twitch implements StreamingPlatform {
 
     @Override
     public User getMostWatchedStreamer() {
-        return this.userService.getUsers()
-                .get(this.ownersContent
-                        .getUsernameByContent(getMostWatchedContent()));
+        return getUserByUsername(this.ownersContent.getMostPopularUser());
     }
 
     @Override

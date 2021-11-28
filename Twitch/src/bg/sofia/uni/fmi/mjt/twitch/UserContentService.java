@@ -44,14 +44,17 @@ public class UserContentService {
         return Set.copyOf(this.ownersContent.get(username));
     }
 
-    public String getUsernameByContent(Content content) {
-        for (Map.Entry<String, Set<Content>> entry : this.ownersContent.entrySet()) {
-            if (entry.getValue().contains(content)) {
-                return entry.getKey();
+    public String getMostPopularUser() {
+        String mostPopularUser = null;
+        long userViews = 0;
+
+        for (Map.Entry<String, Set<Content>> currentContents : this.ownersContent.entrySet()) {
+            if (userViews <= getAllViews(currentContents.getValue())) {
+                mostPopularUser = currentContents.getKey();
             }
         }
 
-        throw new RuntimeException("User with given content was not found");
+        return mostPopularUser;
     }
 
     public Set<Content> getAllContent() {
@@ -85,5 +88,14 @@ public class UserContentService {
         }
 
         return List.copyOf(this.watcherContent.get(username));
+    }
+
+    private long getAllViews(Set<Content> contentSet) {
+        long allViews = 0;
+
+        for (Content currentContent : contentSet) {
+            allViews += currentContent.getNumberOfViews();
+        }
+        return allViews;
     }
 }
