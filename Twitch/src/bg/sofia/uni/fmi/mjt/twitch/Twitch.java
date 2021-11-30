@@ -105,7 +105,9 @@ public class Twitch implements StreamingPlatform {
 
     @Override
     public List<Category> getMostWatchedCategoriesBy(String username) throws UserNotFoundException {
-        List<Content> userContent = new ArrayList<>(List.copyOf(this.userContentService.getAllWatchedContentBy(username)));
+        List<Content> userContent = new ArrayList<>(
+                List.copyOf(this.userContentService.getAllWatchedContentBy(username)));
+
         Collections.sort(userContent, Collections.reverseOrder(new Comparator<>() {
             @Override
             public int compare(Content o1, Content o2) {
