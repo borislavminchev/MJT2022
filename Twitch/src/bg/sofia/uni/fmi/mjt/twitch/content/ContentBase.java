@@ -27,11 +27,6 @@ public abstract class ContentBase implements Content {
         this.duration = null;
         this.numberOfViews = 0;
     }
-    public ContentBase(Metadata metadata) {
-        this.metadata = metadata;
-        this.duration = null;
-        this.numberOfViews = 0;
-    }
     @Override
     public void startWatching(User user) {
         if (user == null) {

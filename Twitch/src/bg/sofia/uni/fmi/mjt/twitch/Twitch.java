@@ -14,11 +14,11 @@ import java.util.*;
 
 public class Twitch implements StreamingPlatform {
     private final UserService userService;
-    private final UserContentService ownersContent;
+    private final UserContentService userContentService;
 
     Twitch(UserService userService) {
         this.userService = userService;
-        ownersContent = new UserContentService();
+        userContentService = new UserContentService();
     }
 
     @Override
@@ -41,7 +41,7 @@ public class Twitch implements StreamingPlatform {
         user.setStatus(UserStatus.STREAMING);
 
         Stream stream = new Stream(title, category, user);
-        ownersContent.newContent(stream, username);
+        userContentService.newContent(stream, username);
         return stream;
     }
 
@@ -63,8 +63,8 @@ public class Twitch implements StreamingPlatform {
         user.setStatus(UserStatus.OFFLINE);
 
         Video video = new Video(stream.getMetadata(), stream.getDuration());
-        this.ownersContent.removeContent(stream, username);
-        this.ownersContent.newContent(video, username);
+        this.userContentService.removeContent(stream, username);
+        this.userContentService.newContent(video, username);
 
         return video;
     }
@@ -85,27 +85,27 @@ public class Twitch implements StreamingPlatform {
         }
 
         content.startWatching(user);
-        this.ownersContent.registerWatch(username, content);
+        this.userContentService.registerWatch(username, content);
     }
 
     @Override
     public User getMostWatchedStreamer() {
-        return getUserByUsername(this.ownersContent.getMostPopularUser());
+        return getUserByUsername(this.userContentService.getMostPopularUser());
     }
 
     @Override
     public Content getMostWatchedContent() {
-        return getMostWatched(this.ownersContent.getAllContent());
+        return getMostWatched(this.userContentService.getAllContent());
     }
 
     @Override
     public Content getMostWatchedContentFrom(String username) throws UserNotFoundException {
-        return getMostWatched(this.ownersContent.getContentOfUser(username));
+        return getMostWatched(this.userContentService.getContentOfUser(username));
     }
 
     @Override
     public List<Category> getMostWatchedCategoriesBy(String username) throws UserNotFoundException {
-        List<Content> userContent = new ArrayList<>(List.copyOf(this.ownersContent.getAllWatchedContentBy(username)));
+        List<Content> userContent = new ArrayList<>(List.copyOf(this.userContentService.getAllWatchedContentBy(username)));
         Collections.sort(userContent, Collections.reverseOrder(new Comparator<>() {
             @Override
             public int compare(Content o1, Content o2) {

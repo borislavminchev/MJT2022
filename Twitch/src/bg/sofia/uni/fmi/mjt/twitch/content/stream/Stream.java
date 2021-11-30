@@ -20,6 +20,7 @@ public class Stream extends ContentBase {
 
     public Stream(Metadata metadata, Duration duration) {
         super(metadata, duration);
+        this.startTime = LocalDateTime.now();
     }
 
     @Override
