@@ -37,6 +37,7 @@ public class Main {
         Video v = twitch.endStream("go6o", s);
 
         twitch.watch("bobbito", v);
+
         Content c = twitch.getMostWatchedContent();
         User u = twitch.getMostWatchedStreamer();
         System.out.println(c.getMetadata().title() + " " + c.getNumberOfViews() + " " + c.getClass().getSimpleName());
