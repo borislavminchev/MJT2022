@@ -41,8 +41,8 @@ import java.time.LocalDateTime;
 public class DefaultStream implements Stream {
 
     private final Metadata metadata;
-    private LocalDateTime startTime;
-    protected int numberOfViews;
+    private final LocalDateTime startTime;
+    private int numberOfViews;
 
 
     public DefaultStream(Metadata metadata, Duration duration) {

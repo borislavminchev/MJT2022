@@ -9,8 +9,8 @@ import java.time.Duration;
 
 public class DefaultVideo implements Video {
     private final Metadata metadata;
-    protected int numberOfViews;
     private final Duration duration;
+    private int numberOfViews;
 
     public DefaultVideo(String title, Category category, User user, Duration duration) {
         this.metadata = new Metadata(title, category, user);
