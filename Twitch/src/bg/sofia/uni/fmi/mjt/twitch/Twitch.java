@@ -64,6 +64,7 @@ public class Twitch implements StreamingPlatform {
 
         Video video = new Video(stream.getMetadata(), stream.getDuration());
         this.userContentService.removeContent(stream, username);
+        this.userContentService.removeWatchedContent(stream);
         this.userContentService.newContent(video, username);
 
         return video;

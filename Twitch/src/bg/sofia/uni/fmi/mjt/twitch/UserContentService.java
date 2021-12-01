@@ -78,6 +78,15 @@ public class UserContentService {
         }
     }
 
+    public void removeWatchedContent(Content content) {
+        for (Map.Entry<String, List<Content>> entry : this.watcherContent.entrySet()) {
+            if (entry.getValue().contains(content)) {
+                entry.getValue().removeAll(Collections.singletonList(content));
+                this.watcherContent.put(entry.getKey(), entry.getValue());
+            }
+        }
+    }
+
     public List<Content> getAllWatchedContentBy(String username) throws UserNotFoundException {
         if (username == null || username.isEmpty()) {
             throw new IllegalArgumentException("Username cannot be null or empty");
