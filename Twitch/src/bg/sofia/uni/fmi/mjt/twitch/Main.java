@@ -22,6 +22,7 @@ public class Main {
         Map<String, User> map = new HashMap<>();
         map.put("go6o", new DefaultUser("Georgi"));
         map.put("bobbito", new DefaultUser("Bobby"));
+        map.put("momo", new DefaultUser("Momchil"));
 
         UserService users = new DefaultUserService(map);
         StreamingPlatform twitch = new Twitch(users);
@@ -34,18 +35,22 @@ public class Main {
         Thread.sleep(1000);
 
         Content c1 = twitch.getMostWatchedContent();
-        System.out.println(c1.getMetadata().title() + " " + c1.getNumberOfViews() + " " + c1.getClass().getSimpleName());
+        System.out.println(c1.getMetadata().title() + " "
+                + c1.getNumberOfViews() + " " + c1.getClass().getSimpleName());
 
         Video v = twitch.endStream("go6o", s);
 
         twitch.watch("bobbito", v);
+        twitch.watch("momo", v);
 
         Content c = twitch.getMostWatchedContent();
         User u = twitch.getMostWatchedStreamer();
+
         System.out.println(c.getMetadata().title() + " " + c.getNumberOfViews() + " " + c.getClass().getSimpleName());
         System.out.println(u.getName());
         System.out.println(twitch.getMostWatchedContentFrom("go6o").getMetadata().title());
         System.out.println(twitch.getMostWatchedCategoriesBy("bobbito"));
+        System.out.println(twitch.getMostWatchedCategoriesBy("momo"));
 
     }
 }
