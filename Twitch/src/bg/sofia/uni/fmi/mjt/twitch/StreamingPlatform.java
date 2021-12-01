@@ -4,7 +4,9 @@ import java.util.List;
 
 import bg.sofia.uni.fmi.mjt.twitch.content.Category;
 import bg.sofia.uni.fmi.mjt.twitch.content.Content;
+import bg.sofia.uni.fmi.mjt.twitch.content.stream.DefaultStream;
 import bg.sofia.uni.fmi.mjt.twitch.content.stream.Stream;
+import bg.sofia.uni.fmi.mjt.twitch.content.video.DefaultVideo;
 import bg.sofia.uni.fmi.mjt.twitch.content.video.Video;
 import bg.sofia.uni.fmi.mjt.twitch.user.User;
 import bg.sofia.uni.fmi.mjt.twitch.user.UserNotFoundException;
@@ -98,5 +100,4 @@ public interface StreamingPlatform {
      *                               the service
      */
     List<Category> getMostWatchedCategoriesBy(String username) throws UserNotFoundException;
-
 }

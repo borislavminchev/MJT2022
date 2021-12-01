@@ -2,7 +2,9 @@ package bg.sofia.uni.fmi.mjt.twitch;
 
 import bg.sofia.uni.fmi.mjt.twitch.content.Category;
 import bg.sofia.uni.fmi.mjt.twitch.content.Content;
+import bg.sofia.uni.fmi.mjt.twitch.content.stream.DefaultStream;
 import bg.sofia.uni.fmi.mjt.twitch.content.stream.Stream;
+import bg.sofia.uni.fmi.mjt.twitch.content.video.DefaultVideo;
 import bg.sofia.uni.fmi.mjt.twitch.content.video.Video;
 import bg.sofia.uni.fmi.mjt.twitch.user.DefaultUser;
 import bg.sofia.uni.fmi.mjt.twitch.user.User;

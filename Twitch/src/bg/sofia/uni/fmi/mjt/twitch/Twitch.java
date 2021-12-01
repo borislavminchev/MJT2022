@@ -2,7 +2,9 @@ package bg.sofia.uni.fmi.mjt.twitch;
 
 import bg.sofia.uni.fmi.mjt.twitch.content.Category;
 import bg.sofia.uni.fmi.mjt.twitch.content.Content;
+import bg.sofia.uni.fmi.mjt.twitch.content.stream.DefaultStream;
 import bg.sofia.uni.fmi.mjt.twitch.content.stream.Stream;
+import bg.sofia.uni.fmi.mjt.twitch.content.video.DefaultVideo;
 import bg.sofia.uni.fmi.mjt.twitch.content.video.Video;
 import bg.sofia.uni.fmi.mjt.twitch.user.User;
 import bg.sofia.uni.fmi.mjt.twitch.user.UserNotFoundException;
@@ -40,7 +42,7 @@ public class Twitch implements StreamingPlatform {
 
         user.setStatus(UserStatus.STREAMING);
 
-        Stream stream = new Stream(title, category, user);
+        Stream stream = new DefaultStream(title, category, user);
         userContentService.newContent(stream, username);
         return stream;
     }
@@ -62,7 +64,7 @@ public class Twitch implements StreamingPlatform {
 
         user.setStatus(UserStatus.OFFLINE);
 
-        Video video = new Video(stream.getMetadata(), stream.getDuration());
+        Video video = new DefaultVideo(stream.getMetadata(), stream.getDuration());
         this.userContentService.removeContent(stream, username);
         this.userContentService.removeWatchedContent(stream);
         this.userContentService.newContent(video, username);
