@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 
 public class Stream extends ContentBase {
 
-    private LocalDateTime startTime;
+    private final LocalDateTime startTime;
 
     public Stream(String title, Category category, User user) {
         super(title, category, user);
