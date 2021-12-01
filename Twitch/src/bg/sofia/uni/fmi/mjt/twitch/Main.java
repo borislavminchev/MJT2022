@@ -42,7 +42,7 @@ public class Main {
         User u = twitch.getMostWatchedStreamer();
         System.out.println(c.getMetadata().title() + " " + c.getNumberOfViews() + " " + c.getClass().getSimpleName());
         System.out.println(u.getName());
-        System.out.println(twitch.getMostWatchedContentFrom("go6o").getMetadata());
+        System.out.println(twitch.getMostWatchedContentFrom("go6o").getMetadata().title());
         System.out.println(twitch.getMostWatchedCategoriesBy("bobbito"));
 
     }
