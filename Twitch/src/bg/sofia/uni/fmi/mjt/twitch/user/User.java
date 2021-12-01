@@ -12,8 +12,7 @@ public interface User {
     /**
      * Returns the {@link UserStatus} of the user.
      *
-     * @return the {@link
-     * } of the user
+     * @return the {@link UserStatus} of the user
      */
     UserStatus getStatus();
 
