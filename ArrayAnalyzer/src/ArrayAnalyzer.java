@@ -1,3 +1,9 @@
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
 public class ArrayAnalyzer {
 
     public static boolean isMountainArray(int[] array) {
@@ -20,6 +26,6 @@ public class ArrayAnalyzer {
     }
 
     public static void main(String[] args) {
-        System.out.println(isMountainArray(new int[]{3,3,3,3}));
+        System.out.println(Stream.of(1,2,3,4,5,6).reduce(Collectors.toList());
     }
 }

@@ -39,7 +39,6 @@ public class Main {
                 + c1.getNumberOfViews() + " " + c1.getClass().getSimpleName());
 
         Video v = twitch.endStream("go6o", s);
-
         twitch.watch("bobbito", v);
         twitch.watch("momo", v);
 
