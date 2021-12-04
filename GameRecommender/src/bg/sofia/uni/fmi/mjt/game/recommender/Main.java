@@ -25,9 +25,11 @@ public class Main {
 
             for (Iterator<? extends ZipEntry> i = zf.entries().asIterator(); i.hasNext() ;) {
                 ZipEntry file = i.next();
-//                InputStream stream = zf.getInputStream(file);
-                List<Game> games = readAndPrint(zf, file);
-                System.out.println(games.get(0));
+                GameRecommender recommender = new GameRecommender(new InputStreamReader(zf.getInputStream(file), StandardCharsets.UTF_8));
+
+                recommender.getAllGamesByPlatform().forEach((k, v) -> System.out.println(k + " : " + v.size()));
+                System.out.println(recommender.getHighestUserRatedGameByPlatform("PC"));
+//                recommender.getGamesSimilarTo("Assassin's").forEach(System.out::println);
             }
         } catch (IOException e) {
             e.printStackTrace();

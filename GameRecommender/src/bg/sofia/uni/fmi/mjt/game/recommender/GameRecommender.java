@@ -112,8 +112,8 @@ public class GameRecommender {
     public Game getHighestUserRatedGameByPlatform(String platform) {
         return this.games.stream()
                 .filter(g -> g.platform().equals(platform))
-                .sorted(Comparator.comparingDouble(Game::user_review))
-                .findFirst().get();
+                .sorted(Comparator.comparingDouble(Game::user_review).reversed())
+                .findFirst().orElseThrow(NoSuchElementException::new);
     }
 
     /**
@@ -123,7 +123,11 @@ public class GameRecommender {
      * @return all games by platform
      */
     public Map<String, Set<Game>> getAllGamesByPlatform() {
-        throw new UnsupportedOperationException("Method not yet implemented");
+        return this.games.stream()
+                .collect(
+                        Collectors.groupingBy(
+                                Game::platform,
+                                Collectors.mapping(g -> g, Collectors.toSet())));
     }
 
     /**
@@ -136,7 +140,15 @@ public class GameRecommender {
      * @return the number of years a game platform has been live
      */
     public int getYearsActive(String platform) {
-        throw new UnsupportedOperationException("Method not yet implemented");
+        Game minGame = this.games.stream()
+                .filter(g -> g.platform().equals(platform))
+                .min(Comparator.comparing(Game::release_date)).get();
+
+        Game maxGame = this.games.stream()
+                .filter(g -> g.platform().equals(platform))
+                .max(Comparator.comparing(Game::release_date)).get();
+
+        return maxGame.release_date().getYear() - minGame.release_date().getYear();
     }
 
     /**
@@ -149,6 +161,16 @@ public class GameRecommender {
      * @return the games whose summary contains the specified keywords
      */
     public List<Game> getGamesSimilarTo(String... keywords) {
-        throw new UnsupportedOperationException("Method not yet implemented");
+        return this.games.stream().filter(g -> check(g.summary(), List.of(keywords))).toList();
+    }
+
+    private boolean check(String summary, List<String> words) {
+        for (String word : words) {
+            if (!summary.contains(word)) {
+                return false;
+            }
+        }
+
+        return true;
     }
 }

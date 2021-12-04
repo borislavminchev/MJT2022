@@ -7,7 +7,7 @@ public abstract class CacheBase<K, V> implements Cache<K, V> {
     private final int capacity;
     private int totalHits;
     private int successfulHits;
-    private final Storage<K, V> storage;
+    protected final Storage<K, V> storage;
 
     protected CacheBase(Storage<K, V> storage, int capacity) {
         this.storage = storage;

@@ -1,10 +1,15 @@
 package bg.sofia.uni.fmi.mjt.cache;
 
 import bg.sofia.uni.fmi.mjt.cache.exception.ItemNotFound;
+import bg.sofia.uni.fmi.mjt.cache.factory.CacheFactory;
+import bg.sofia.uni.fmi.mjt.cache.factory.EvictionPolicy;
 import bg.sofia.uni.fmi.mjt.cache.storage.Storage;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.Mockito;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -16,6 +21,27 @@ class LeastFrequentlyUsedCacheTest {
     private final LeastFrequentlyUsedCache<String, String> lfu = new LeastFrequentlyUsedCache<>(storage, 3);
 
     @Test
+    public void defaultTests() {
+        Cache testCache = CacheFactory.getInstance(storage, EvictionPolicy.LEAST_FREQUENTLY_USED);
+        assertEquals(LeastFrequentlyUsedCache.class, testCache.getClass());
+
+        assertThrows(IllegalArgumentException.class, () -> CacheFactory.getInstance(storage,
+                -2, EvictionPolicy.LEAST_FREQUENTLY_USED));
+        assertEquals(LeastFrequentlyUsedCache.class, CacheFactory.getInstance(storage,
+                2, EvictionPolicy.LEAST_FREQUENTLY_USED).getClass());
+
+    }
+
+    @Test
+    public void testValues() throws ItemNotFound
+    {
+        Mockito.when(storage.retrieve("abc")).thenReturn("def");
+        lfu.get("abc");
+
+        assertEquals(1, lfu.values().size());
+
+    }
+    @Test
     public void testGetZero() throws ItemNotFound {
         Mockito.when(storage.retrieve("abc")).thenReturn("def");
         assertEquals("def", lfu.get("abc"));
@@ -25,10 +51,13 @@ class LeastFrequentlyUsedCacheTest {
     @Test
     public void testGetOne() throws ItemNotFound {
         Mockito.when(storage.retrieve("abc")).thenReturn("def");
+        Mockito.when(storage.retrieve("a")).thenReturn(null);
         lfu.put("abc", "def");
 
         assertEquals("def", lfu.get("abc"));
+        assertThrows(IllegalArgumentException.class, () -> lfu.get(null));
         assertEquals(1.0, lfu.getHitRate());
+        assertThrows(ItemNotFound.class, () -> lfu.get("a"));
     }
 
     @Test
@@ -160,6 +189,7 @@ class LeastFrequentlyUsedCacheTest {
 
         assertEquals(0, lfu.getHitRate());
         lfu.clear();
+
         assertNull(lfu.getFromCache("abc"));
         assertEquals(0, lfu.getHitRate());
     }

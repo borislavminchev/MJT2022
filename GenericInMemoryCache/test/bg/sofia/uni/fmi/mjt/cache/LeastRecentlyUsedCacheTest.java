@@ -1,8 +1,9 @@
 package bg.sofia.uni.fmi.mjt.cache;
 
 import bg.sofia.uni.fmi.mjt.cache.exception.ItemNotFound;
+import bg.sofia.uni.fmi.mjt.cache.factory.CacheFactory;
+import bg.sofia.uni.fmi.mjt.cache.factory.EvictionPolicy;
 import bg.sofia.uni.fmi.mjt.cache.storage.Storage;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.Mockito;
@@ -13,22 +14,46 @@ class LeastRecentlyUsedCacheTest {
     @Mock
     private Storage<String, String> storage = Mockito.mock(Storage.class);
 
-    private final LeastRecentlyUsedCache<String, String> lfu = new LeastRecentlyUsedCache<>(storage, 3);
+    private final LeastRecentlyUsedCache<String, String> lru = new LeastRecentlyUsedCache<>(storage, 3);
+
+    @Test
+    public void defaultTests() {
+        Cache testCache = CacheFactory.getInstance(storage, EvictionPolicy.LEAST_RECENTLY_USED);
+        assertEquals(LeastRecentlyUsedCache.class, testCache.getClass());
+
+        assertThrows(IllegalArgumentException.class, () -> CacheFactory.getInstance(storage,
+                -2, EvictionPolicy.LEAST_RECENTLY_USED));
+        assertEquals(LeastRecentlyUsedCache.class, CacheFactory.getInstance(storage,
+                2, EvictionPolicy.LEAST_RECENTLY_USED).getClass());
+    }
+
+    @Test
+    public void testValues() throws ItemNotFound
+    {
+        Mockito.when(storage.retrieve("abc")).thenReturn("def");
+        lru.get("abc");
+
+        assertEquals(1, lru.values().size());
+
+    }
 
     @Test
     public void testGetZero() throws ItemNotFound {
         Mockito.when(storage.retrieve("abc")).thenReturn("def");
-        assertEquals("def", lfu.get("abc"));
-        assertEquals(0.0, lfu.getHitRate());
+        assertEquals("def", lru.get("abc"));
+        assertEquals(0.0, lru.getHitRate());
     }
 
     @Test
     public void testGetOne() throws ItemNotFound {
         Mockito.when(storage.retrieve("abc")).thenReturn("def");
-        lfu.put("abc", "def");
+        Mockito.when(storage.retrieve("a")).thenReturn(null);
+        lru.put("abc", "def");
 
-        assertEquals("def", lfu.get("abc"));
-        assertEquals(1.0, lfu.getHitRate());
+        assertEquals("def", lru.get("abc"));
+        assertThrows(IllegalArgumentException.class, () -> lru.get(null));
+        assertEquals(1.0, lru.getHitRate());
+        assertThrows(ItemNotFound.class, () -> lru.get("a"));
     }
 
     @Test
@@ -36,11 +61,11 @@ class LeastRecentlyUsedCacheTest {
         Mockito.when(storage.retrieve("abc")).thenReturn("def");
         Mockito.when(storage.retrieve("aaa")).thenReturn("bbb");
 
-        lfu.put("abc", "def");
+        lru.put("abc", "def");
 
-        assertEquals("def", lfu.get("abc"));
-        assertEquals("bbb", lfu.get("aaa"));
-        assertEquals(0.5, lfu.getHitRate());
+        assertEquals("def", lru.get("abc"));
+        assertEquals("bbb", lru.get("aaa"));
+        assertEquals(0.5, lru.getHitRate());
     }
 
     @Test
@@ -49,33 +74,33 @@ class LeastRecentlyUsedCacheTest {
         Mockito.when(storage.retrieve("aaa")).thenReturn("bbb");
         Mockito.when(storage.retrieve("a")).thenReturn("b");
 
-        lfu.put("abc", "def");
+        lru.put("abc", "def");
 
-        assertEquals("def", lfu.get("abc"));
-        assertEquals("bbb", lfu.get("aaa"));
-        assertEquals("b", lfu.get("a"));
-        assertEquals(1.0 / 3, lfu.getHitRate());
+        assertEquals("def", lru.get("abc"));
+        assertEquals("bbb", lru.get("aaa"));
+        assertEquals("b", lru.get("a"));
+        assertEquals(1.0 / 3, lru.getHitRate());
     }
 
     @Test
     public void testResetHitRateZero() throws ItemNotFound {
         Mockito.when(storage.retrieve("abc")).thenReturn("def");
-        lfu.get("abc");
+        lru.get("abc");
 
-        assertEquals(0, lfu.getHitRate());
-        lfu.resetHitRate();
-        assertEquals(0, lfu.getHitRate());
+        assertEquals(0, lru.getHitRate());
+        lru.resetHitRate();
+        assertEquals(0, lru.getHitRate());
     }
 
     @Test
     public void testResetHitRateOne() throws ItemNotFound {
         Mockito.when(storage.retrieve("abc")).thenReturn("def");
-        lfu.put("abc", "def");
-        lfu.get("abc");
+        lru.put("abc", "def");
+        lru.get("abc");
 
-        assertEquals(1.0, lfu.getHitRate());
-        lfu.resetHitRate();
-        assertEquals(0, lfu.getHitRate());
+        assertEquals(1.0, lru.getHitRate());
+        lru.resetHitRate();
+        assertEquals(0, lru.getHitRate());
     }
 
     @Test
@@ -83,13 +108,13 @@ class LeastRecentlyUsedCacheTest {
         Mockito.when(storage.retrieve("abc")).thenReturn("def");
         Mockito.when(storage.retrieve("aaa")).thenReturn("bbb");
 
-        lfu.put("abc", "def");
-        lfu.get("abc");
-        lfu.get("aaa");
+        lru.put("abc", "def");
+        lru.get("abc");
+        lru.get("aaa");
 
-        assertEquals(0.5, lfu.getHitRate());
-        lfu.resetHitRate();
-        assertEquals(0, lfu.getHitRate());
+        assertEquals(0.5, lru.getHitRate());
+        lru.resetHitRate();
+        assertEquals(0, lru.getHitRate());
     }
 
     @Test
@@ -97,16 +122,16 @@ class LeastRecentlyUsedCacheTest {
         Mockito.when(storage.retrieve("abc")).thenReturn("def");
         Mockito.when(storage.retrieve("aaa")).thenReturn("bbb");
 
-        lfu.put("abc", "def");
-        lfu.get("abc");
-        lfu.get("aaa");
+        lru.put("abc", "def");
+        lru.get("abc");
+        lru.get("aaa");
 
-        assertEquals(0.5, lfu.getHitRate());
-        lfu.resetHitRate();
-        assertEquals(0, lfu.getHitRate());
-        lfu.get("abc");
-        lfu.get("aaa");
-        assertEquals(1, lfu.getHitRate());
+        assertEquals(0.5, lru.getHitRate());
+        lru.resetHitRate();
+        assertEquals(0, lru.getHitRate());
+        lru.get("abc");
+        lru.get("aaa");
+        assertEquals(1, lru.getHitRate());
     }
 
     @Test
@@ -115,65 +140,65 @@ class LeastRecentlyUsedCacheTest {
         Mockito.when(storage.retrieve("aaa")).thenReturn("bbb");
         Mockito.when(storage.retrieve("a")).thenReturn("b");
 
-        lfu.put("abc", "def");
-        lfu.get("abc");
-        lfu.get("aaa");
+        lru.put("abc", "def");
+        lru.get("abc");
+        lru.get("aaa");
 
-        assertEquals(0.5, lfu.getHitRate());
-        lfu.resetHitRate();
-        assertEquals(0, lfu.getHitRate());
-        lfu.get("abc");
-        lfu.get("aaa");
-        lfu.get("a");
-        assertEquals(2.0 / 3, lfu.getHitRate());
+        assertEquals(0.5, lru.getHitRate());
+        lru.resetHitRate();
+        assertEquals(0, lru.getHitRate());
+        lru.get("abc");
+        lru.get("aaa");
+        lru.get("a");
+        assertEquals(2.0 / 3, lru.getHitRate());
     }
 
     @Test
     public void testGetFromCacheEmpty() {
         Mockito.when(storage.retrieve("abc")).thenReturn("def");
 
-        assertNull(lfu.getFromCache("abc"));
+        assertNull(lru.getFromCache("abc"));
     }
 
     @Test
     public void testGetFromCacheOne() throws ItemNotFound {
         Mockito.when(storage.retrieve("abc")).thenReturn("def");
-        lfu.get("abc");
+        lru.get("abc");
 
-        assertEquals("def", lfu.getFromCache("abc"));
+        assertEquals("def", lru.getFromCache("abc"));
     }
 
     @Test
     public void testGetFromCacheTwo() throws ItemNotFound {
         Mockito.when(storage.retrieve("abc")).thenReturn("def");
-        lfu.put("a", "b");
-        lfu.get("abc");
+        lru.put("a", "b");
+        lru.get("abc");
 
-        assertEquals("def", lfu.getFromCache("abc"));
-        assertEquals("b", lfu.getFromCache("a"));
+        assertEquals("def", lru.getFromCache("abc"));
+        assertEquals("b", lru.getFromCache("a"));
     }
 
     @Test
     public void testClearZero() throws ItemNotFound {
         Mockito.when(storage.retrieve("abc")).thenReturn("def");
-        lfu.get("abc");
+        lru.get("abc");
 
-        assertEquals(0, lfu.getHitRate());
-        lfu.clear();
-        assertNull(lfu.getFromCache("abc"));
-        assertEquals(0, lfu.getHitRate());
+        assertEquals(0, lru.getHitRate());
+        lru.clear();
+        assertNull(lru.getFromCache("abc"));
+        assertEquals(0, lru.getHitRate());
     }
 
     @Test
     public void testClearOne() throws ItemNotFound {
         Mockito.when(storage.retrieve("abc")).thenReturn("def");
-        lfu.put("abc", "def");
-        lfu.get("abc");
+        lru.put("abc", "def");
+        lru.get("abc");
 
-        assertEquals(1.0, lfu.getHitRate());
-        lfu.clear();
-        assertNull(lfu.getFromCache("abc"));
-        assertEquals(0, lfu.getHitRate());
+        assertEquals(1.0, lru.getHitRate());
+        lru.clear();
+        assertNull(lru.getFromCache("abc"));
+        assertEquals(0, lru.getHitRate());
     }
 
     @Test
@@ -181,15 +206,15 @@ class LeastRecentlyUsedCacheTest {
         Mockito.when(storage.retrieve("abc")).thenReturn("def");
         Mockito.when(storage.retrieve("aaa")).thenReturn("bbb");
 
-        lfu.put("abc", "def");
-        lfu.get("abc");
-        lfu.get("aaa");
+        lru.put("abc", "def");
+        lru.get("abc");
+        lru.get("aaa");
 
-        assertEquals(0.5, lfu.getHitRate());
-        lfu.clear();
-        assertNull(lfu.getFromCache("abc"));
-        assertNull(lfu.getFromCache("aaa"));
-        assertEquals(0, lfu.getHitRate());
+        assertEquals(0.5, lru.getHitRate());
+        lru.clear();
+        assertNull(lru.getFromCache("abc"));
+        assertNull(lru.getFromCache("aaa"));
+        assertEquals(0, lru.getHitRate());
     }
 
     @Test
@@ -197,20 +222,20 @@ class LeastRecentlyUsedCacheTest {
         Mockito.when(storage.retrieve("abc")).thenReturn("def");
         Mockito.when(storage.retrieve("aaa")).thenReturn("bbb");
 
-        lfu.put("abc", "def");
-        lfu.get("abc");
-        lfu.get("aaa");
+        lru.put("abc", "def");
+        lru.get("abc");
+        lru.get("aaa");
 
-        assertEquals(0.5, lfu.getHitRate());
-        lfu.clear();
-        assertNull(lfu.getFromCache("abc"));
-        assertNull(lfu.getFromCache("aaa"));
-        assertEquals(0, lfu.getHitRate());
-        lfu.get("abc");
-        lfu.get("aaa");
-        assertEquals("def", lfu.getFromCache("abc"));
-        assertEquals("bbb", lfu.getFromCache("aaa"));
-        assertEquals(0, lfu.getHitRate());
+        assertEquals(0.5, lru.getHitRate());
+        lru.clear();
+        assertNull(lru.getFromCache("abc"));
+        assertNull(lru.getFromCache("aaa"));
+        assertEquals(0, lru.getHitRate());
+        lru.get("abc");
+        lru.get("aaa");
+        assertEquals("def", lru.getFromCache("abc"));
+        assertEquals("bbb", lru.getFromCache("aaa"));
+        assertEquals(0, lru.getHitRate());
     }
 
     @Test
@@ -219,37 +244,37 @@ class LeastRecentlyUsedCacheTest {
         Mockito.when(storage.retrieve("aaa")).thenReturn("bbb");
         Mockito.when(storage.retrieve("a")).thenReturn("b");
 
-        lfu.put("abc", "def");
-        lfu.get("abc");
-        lfu.get("aaa");
+        lru.put("abc", "def");
+        lru.get("abc");
+        lru.get("aaa");
 
-        assertEquals(0.5, lfu.getHitRate());
-        lfu.clear();
-        assertNull(lfu.getFromCache("abc"));
-        assertNull(lfu.getFromCache("aaa"));
-        assertEquals(0, lfu.getHitRate());
-        lfu.get("abc");
-        lfu.get("aaa");
-        lfu.get("a");
-        assertEquals("def", lfu.getFromCache("abc"));
-        assertEquals("bbb", lfu.getFromCache("aaa"));
-        assertEquals("b", lfu.getFromCache("a"));
-        assertEquals(0, lfu.getHitRate());
+        assertEquals(0.5, lru.getHitRate());
+        lru.clear();
+        assertNull(lru.getFromCache("abc"));
+        assertNull(lru.getFromCache("aaa"));
+        assertEquals(0, lru.getHitRate());
+        lru.get("abc");
+        lru.get("aaa");
+        lru.get("a");
+        assertEquals("def", lru.getFromCache("abc"));
+        assertEquals("bbb", lru.getFromCache("aaa"));
+        assertEquals("b", lru.getFromCache("a"));
+        assertEquals(0, lru.getHitRate());
     }
 
     @Test
     public void testEvictFromCacheEmpty() {
-        assertNull(lfu.getFromCache("a"));
-        lfu.evictFromCache();
-        assertNull(lfu.getFromCache("a"));
+        assertNull(lru.getFromCache("a"));
+        lru.evictFromCache();
+        assertNull(lru.getFromCache("a"));
     }
 
     @Test
     public void testEvictFromCacheOne() {
-        lfu.put("a", "b");
-        assertTrue(lfu.containsKey("a"));
-        lfu.evictFromCache();
-        assertFalse(lfu.containsKey("a"));
+        lru.put("a", "b");
+        assertTrue(lru.containsKey("a"));
+        lru.evictFromCache();
+        assertFalse(lru.containsKey("a"));
     }
 
 //    @Test
@@ -264,28 +289,28 @@ class LeastRecentlyUsedCacheTest {
 
     @Test
     public void testEvictFromCacheTwo() {
-        lfu.put("a", "b");
-        lfu.put("aaa", "bbb");
-        lfu.put("aaa", "bbb");
-        assertTrue(lfu.containsKey("a"));
-        assertTrue(lfu.containsKey("aaa"));
-        lfu.evictFromCache();
-        assertFalse(lfu.containsKey("a"));
+        lru.put("a", "b");
+        lru.put("aaa", "bbb");
+        lru.put("aaa", "bbb");
+        assertTrue(lru.containsKey("a"));
+        assertTrue(lru.containsKey("aaa"));
+        lru.evictFromCache();
+        assertFalse(lru.containsKey("a"));
     }
 
     @Test
     public void testEvictFromCacheTwoLargerUse() {
-        lfu.put("a", "b");
-        lfu.put("a", "b");
-        lfu.put("aaa", "bbb");
-        lfu.put("a", "b");
-        lfu.put("aaa", "bbb");
-        lfu.put("a", "b");
-        lfu.put("a", "b");
-        assertTrue(lfu.containsKey("a"));
-        assertTrue(lfu.containsKey("aaa"));
-        lfu.evictFromCache();
-        assertFalse(lfu.containsKey("aaa"));
+        lru.put("a", "b");
+        lru.put("a", "b");
+        lru.put("aaa", "bbb");
+        lru.put("a", "b");
+        lru.put("aaa", "bbb");
+        lru.put("a", "b");
+        lru.put("a", "b");
+        assertTrue(lru.containsKey("a"));
+        assertTrue(lru.containsKey("aaa"));
+        lru.evictFromCache();
+        assertFalse(lru.containsKey("aaa"));
     }
 
     @Test
@@ -295,18 +320,18 @@ class LeastRecentlyUsedCacheTest {
         Mockito.when(storage.retrieve("a")).thenReturn("b");
         Mockito.when(storage.retrieve("test")).thenReturn("test123");
 
-        lfu.get("abc");
-        lfu.get("a");
-        lfu.get("aaa");
+        lru.get("abc");
+        lru.get("a");
+        lru.get("aaa");
 
-        assertTrue(lfu.containsKey("a"));
-        assertTrue(lfu.containsKey("aaa"));
-        assertTrue(lfu.containsKey("abc"));
-        lfu.get("test");
-        assertTrue(lfu.containsKey("a"));
-        assertTrue(lfu.containsKey("aaa"));
-        assertTrue(lfu.containsKey("test"));
-        assertFalse(lfu.containsKey("abc"));
+        assertTrue(lru.containsKey("a"));
+        assertTrue(lru.containsKey("aaa"));
+        assertTrue(lru.containsKey("abc"));
+        lru.get("test");
+        assertTrue(lru.containsKey("a"));
+        assertTrue(lru.containsKey("aaa"));
+        assertTrue(lru.containsKey("test"));
+        assertFalse(lru.containsKey("abc"));
 
     }
 
@@ -317,25 +342,25 @@ class LeastRecentlyUsedCacheTest {
         Mockito.when(storage.retrieve("a")).thenReturn("b");
         Mockito.when(storage.retrieve("test")).thenReturn("test123");
 
-        lfu.get("abc");
-        lfu.get("a");
-        lfu.get("aaa");
-        lfu.get("a");
-        lfu.get("a");
-        lfu.get("aaa");
-        lfu.get("abc");
-        lfu.get("aaa");
-        lfu.get("aaa");
-        lfu.get("aaa");
+        lru.get("abc");
+        lru.get("a");
+        lru.get("aaa");
+        lru.get("a");
+        lru.get("a");
+        lru.get("aaa");
+        lru.get("abc");
+        lru.get("aaa");
+        lru.get("aaa");
+        lru.get("aaa");
 
-        assertTrue(lfu.containsKey("a"));
-        assertTrue(lfu.containsKey("aaa"));
-        assertTrue(lfu.containsKey("abc"));
-        lfu.get("test");
-        assertTrue(lfu.containsKey("abc"));
-        assertTrue(lfu.containsKey("aaa"));
-        assertTrue(lfu.containsKey("test"));
-        assertFalse(lfu.containsKey("a"));
+        assertTrue(lru.containsKey("a"));
+        assertTrue(lru.containsKey("aaa"));
+        assertTrue(lru.containsKey("abc"));
+        lru.get("test");
+        assertTrue(lru.containsKey("abc"));
+        assertTrue(lru.containsKey("aaa"));
+        assertTrue(lru.containsKey("test"));
+        assertFalse(lru.containsKey("a"));
 
     }
 }
