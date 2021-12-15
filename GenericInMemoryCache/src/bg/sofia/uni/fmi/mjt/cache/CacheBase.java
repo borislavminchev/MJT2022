@@ -30,6 +30,7 @@ public abstract class CacheBase<K, V> implements Cache<K, V> {
         V returnValue = getFromCache(key);
         if (returnValue != null) {
             successfulHits += 1;
+            addToCache(key, returnValue);
             return returnValue;
         }
 
@@ -37,6 +38,7 @@ public abstract class CacheBase<K, V> implements Cache<K, V> {
         // will try to fetch it from primary storage
         returnValue = storage.retrieve(key);
         if (returnValue == null) {
+            totalHits--;
             throw new ItemNotFound("Item with key %s not found");
         }
 

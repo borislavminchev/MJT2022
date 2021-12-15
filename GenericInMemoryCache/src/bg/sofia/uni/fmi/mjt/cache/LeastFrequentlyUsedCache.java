@@ -13,7 +13,7 @@ public class LeastFrequentlyUsedCache<K, V> extends CacheBase<K, V> {
     public LeastFrequentlyUsedCache(Storage<K, V> storage, int capacity) {
         super(storage, capacity);
         cache = new HashMap<>(capacity);
-        keyUses = new HashMap<>(capacity);
+        keyUses = new HashMap<>();
     }
 
     @Override
@@ -63,7 +63,7 @@ public class LeastFrequentlyUsedCache<K, V> extends CacheBase<K, V> {
 
         for (K key : keyUses.keySet()) {
             int usageCount = keyUses.get(key);
-            if (minUsageCount == 0 || usageCount <= minUsageCount) {
+            if (minUsageCount == 0 || usageCount < minUsageCount) {
                 toBeRemoved = key;
                 minUsageCount = usageCount;
             }
