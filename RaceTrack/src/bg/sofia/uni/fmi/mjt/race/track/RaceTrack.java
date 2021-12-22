@@ -1,4 +1,36 @@
 package bg.sofia.uni.fmi.mjt.race.track;
 
-public class RaceTrack {
+import bg.sofia.uni.fmi.mjt.race.track.pit.Pit;
+
+import java.util.List;
+
+public class RaceTrack implements Track {
+    private Pit pit;
+    private List<Integer> finishedCars;
+
+    public RaceTrack(int numberOfTeams) {
+        pit = new Pit(numberOfTeams);
+    }
+
+    @Override
+    public void enterPit(Car car) {
+        this.pit.submitCar(car);
+    }
+
+    @Override
+    public int getNumberOfFinishedCars() {
+        return pit.getFinishedCars().size();
+    }
+
+    @Override
+    public List<Integer> getFinishedCarsIds() {
+        return List.copyOf(pit.getFinishedCars());
+    }
+
+    @Override
+    public Pit getPit() {
+        return this.pit;
+    }
+
+
 }

@@ -1,26 +1,39 @@
 package bg.sofia.uni.fmi.mjt.race.track;
 
+import java.util.Random;
+
 public class Car implements Runnable {
 
+    private int id;
+    private int nPitStops;
+    private Track track;
+
     public Car(int id, int nPitStops, Track track) {
-        throw new UnsupportedOperationException("Method not yet implemented");
+        this.id = id;
+        this.nPitStops = nPitStops;
+        this.track = track;
     }
 
     @Override
     public void run() {
-        throw new UnsupportedOperationException("Method not yet implemented");
+        try {
+            Thread.sleep(new Random().nextLong(1000));
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        track.getPit().submitCar(this);
     }
 
     public int getCarId() {
-        throw new UnsupportedOperationException("Method not yet implemented");
+       return this.id;
     }
 
     public int getNPitStops() {
-        throw new UnsupportedOperationException("Method not yet implemented");
+        return this.nPitStops;
     }
 
     public Track getTrack() {
-        throw new UnsupportedOperationException("Method not yet implemented");
+        return this.track;
     }
 
 }
