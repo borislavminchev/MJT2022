@@ -17,9 +17,7 @@ public class BoardGamesRecommender implements Recommender {
      * @param datasetFileName the name of the dataset file (inside the ZIP archive)
      * @param stopwordsFile   the stopwords file
      */
-    BoardGamesRecommender(Path datasetZipFile, String datasetFileName, Path stopwordsFile) {
-
-    }
+    BoardGamesRecommender(Path datasetZipFile, String datasetFileName, Path stopwordsFile) { }
 
     /**
      * Constructs an instance using the provided Reader streams.
@@ -27,7 +25,7 @@ public class BoardGamesRecommender implements Recommender {
      * @param dataset   Reader from which the dataset can be read
      * @param stopwords Reader from which the stopwords list can be read
      */
-    BoardGamesRecommender(Reader dataset, Reader stopwords) {}
+    BoardGamesRecommender(Reader dataset, Reader stopwords) { }
 
     @Override
     public Collection<BoardGame> getGames() {
