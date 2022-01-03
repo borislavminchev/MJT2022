@@ -6,8 +6,6 @@ import java.util.List;
 
 public class RaceTrack implements Track {
     private Pit pit;
-    private List<Integer> finishedCars;
-
     public RaceTrack(int numberOfTeams) {
         pit = new Pit(numberOfTeams);
     }
