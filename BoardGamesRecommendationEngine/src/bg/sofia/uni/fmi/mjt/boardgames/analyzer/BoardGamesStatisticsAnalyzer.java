@@ -9,7 +9,7 @@ public class BoardGamesStatisticsAnalyzer implements StatisticsAnalyzer {
 
     private final List<BoardGame> games;
 
-    BoardGamesStatisticsAnalyzer(Collection<BoardGame> games) {
+    public BoardGamesStatisticsAnalyzer(Collection<BoardGame> games) {
         this.games = new ArrayList<>(games);
     }
 

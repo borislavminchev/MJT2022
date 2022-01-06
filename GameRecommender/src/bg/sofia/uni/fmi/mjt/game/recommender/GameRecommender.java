@@ -2,9 +2,7 @@ package bg.sofia.uni.fmi.mjt.game.recommender;
 
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.io.Reader;
-import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -19,7 +17,11 @@ public class GameRecommender {
      * @param dataInput java.io.Reader input stream from which the dataset can be read
      */
     public GameRecommender(Reader dataInput) {
-        try (var stream =new BufferedReader(dataInput)) {
+        if (dataInput == null) {
+            throw new IllegalArgumentException();
+        }
+
+        try (var stream = new BufferedReader(dataInput)) {
             games = stream.lines()
                     .skip(1)
                     .map(Game::of)
@@ -45,6 +47,10 @@ public class GameRecommender {
      * @return a list of all games released after {@code date}, in an undefined order.
      */
     public List<Game> getGamesReleasedAfter(LocalDate date) {
+        if (date == null) {
+            throw new IllegalArgumentException();
+        }
+
         return this.games.stream()
                 .filter(i -> i.release_date().isAfter(date))
                 .toList();
@@ -63,9 +69,10 @@ public class GameRecommender {
             throw new IllegalArgumentException("N cannot be negative");
         }
 
+        int limit = Math.min(n, this.games.size());
         return this.games.stream()
                 .sorted(Comparator.comparingDouble(Game::user_review))
-                .limit(n)
+                .limit(limit)
                 .toList();
     }
 
@@ -78,6 +85,7 @@ public class GameRecommender {
      * @return the years when a game with at least {@code minimalScore} meta score has been released
      */
     public List<Integer> getYearsWithTopScoringGames(int minimalScore) {
+
         return this.games.stream()
                 .filter(g -> g.meta_score() >= minimalScore)
                 .map(Game::release_date)
@@ -140,6 +148,13 @@ public class GameRecommender {
      * @return the number of years a game platform has been live
      */
     public int getYearsActive(String platform) {
+        List<Game> platforms = this.games.stream()
+                .filter(g -> g.platform().equals(platform))
+                .collect(Collectors.toList());
+        if (platforms.size() == 0) {
+            return 0;
+        }
+
         Game minGame = this.games.stream()
                 .filter(g -> g.platform().equals(platform))
                 .min(Comparator.comparing(Game::release_date)).get();
@@ -148,7 +163,7 @@ public class GameRecommender {
                 .filter(g -> g.platform().equals(platform))
                 .max(Comparator.comparing(Game::release_date)).get();
 
-        return maxGame.release_date().getYear() - minGame.release_date().getYear();
+        return maxGame.release_date().getYear() - minGame.release_date().getYear() + 1;
     }
 
     /**

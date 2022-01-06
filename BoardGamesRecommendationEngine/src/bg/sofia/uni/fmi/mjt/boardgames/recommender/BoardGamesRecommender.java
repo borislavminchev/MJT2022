@@ -24,22 +24,23 @@ public class BoardGamesRecommender implements Recommender {
      * @param datasetFileName the name of the dataset file (inside the ZIP archive)
      * @param stopwordsFile   the stopwords file
      */
-    BoardGamesRecommender(Path datasetZipFile, String datasetFileName, Path stopwordsFile) {
+    public BoardGamesRecommender(Path datasetZipFile, String datasetFileName, Path stopwordsFile) {
         try (ZipFile zipFile = new ZipFile(datasetZipFile.toString())) {
-
             for (Iterator<? extends ZipEntry> it = zipFile.entries().asIterator(); it.hasNext(); ) {
                 ZipEntry entry = it.next();
-
                 if (!entry.isDirectory() && entry.getName().endsWith(datasetFileName)) {
                     this.games = loadGames(new InputStreamReader(zipFile.getInputStream(entry)));
                     this.stopwords = retriveStopwords(new FileReader(stopwordsFile.toString()));
                     this.wordsGameIdx = loadWords(this.games);
-                    return;
+                    break;
                 }
-
             }
         } catch (IOException e) {
             e.printStackTrace();
+        } finally {
+            if (this.games == null || this.stopwords == null || this.wordsGameIdx == null) {
+                throw new RuntimeException("Information loading error.");
+            }
         }
     }
 
@@ -49,7 +50,7 @@ public class BoardGamesRecommender implements Recommender {
      * @param dataset   Reader from which the dataset can be read
      * @param stopwords Reader from which the stopwords list can be read
      */
-    BoardGamesRecommender(Reader dataset, Reader stopwords) {
+    public BoardGamesRecommender(Reader dataset, Reader stopwords) {
         this.games = loadGames(dataset);
         this.stopwords = retriveStopwords(stopwords);
         this.wordsGameIdx = loadWords(this.games);
@@ -73,15 +74,19 @@ public class BoardGamesRecommender implements Recommender {
     public List<BoardGame> getByDescription(String... keywords) {
         List<String> wordList = Stream.of(keywords)
                 .filter(i -> !this.stopwords.contains(i))
+                .filter(i -> !i.isEmpty())
                 .distinct()
                 .collect(Collectors.toList());
 
         Set<Integer> gamesIdx = new HashSet<>();
         this.wordsGameIdx.entrySet().stream()
-                .filter(wordList::contains)
+                .filter(i -> wordList.contains(i.getKey()))
                 .forEach(i -> gamesIdx.addAll(i.getValue()));
 
-        return this.games.stream().filter(i -> gamesIdx.contains(i.id())).toList();
+        return this.games.stream()
+                .filter(i -> gamesIdx.contains(i.id()))
+                .sorted(Comparator.comparingInt(i -> getSimilarWords((BoardGame) i, wordList)).reversed())
+                .toList();
     }
 
     @Override
@@ -112,13 +117,26 @@ public class BoardGamesRecommender implements Recommender {
         return combined.size() - common.size();
     }
 
+    private int getSimilarWords(BoardGame game, List<String> wordList) {
+        List<String> descriptionWords = Stream.of(game.description()
+                        .split("[\\p{IsPunctuation}\\p{IsWhite_Space}]+"))
+                .filter(i -> !this.stopwords.contains(i))
+                .filter(i -> !i.isEmpty())
+                .collect(Collectors.toList());
+
+        List<String> common = new ArrayList<>(List.copyOf(descriptionWords));
+        common.retainAll(wordList);
+        return common.size();
+
+    }
+
     private void writeEntry(Map.Entry<String, Set<Integer>> entry, Writer writer) {
         try (BufferedWriter bw = new BufferedWriter(writer)) {
             String idString = entry.getValue().stream()
                     .map(String::valueOf)
                     .collect(Collectors.joining(", "));
 
-            bw.write(entry.getKey() + ": " + idString);
+            bw.write(entry.getKey() + ": " + idString + "\n");
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -130,7 +148,6 @@ public class BoardGamesRecommender implements Recommender {
             String firstLine = reader.lines().limit(1).toList().get(0);
 
             games = reader.lines()
-                    .skip(1)
                     .map(i->BoardGame.of(i, firstLine))
                     .collect(Collectors.toList());
 
@@ -146,6 +163,7 @@ public class BoardGamesRecommender implements Recommender {
         for (BoardGame game : boardGames) {
             Set<String> words = Stream.of(game.description().split("[\\p{IsPunctuation}\\p{IsWhite_Space}]+"))
                     .filter(i -> !this.stopwords.contains(i))
+                    .filter(i -> !i.isEmpty())
                     .collect(Collectors.toSet());
 
             for (String word : words) {
