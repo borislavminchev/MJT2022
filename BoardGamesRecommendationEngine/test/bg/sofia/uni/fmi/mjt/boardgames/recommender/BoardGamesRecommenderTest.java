@@ -127,8 +127,8 @@ class BoardGamesRecommenderTest {
         List<BoardGame> similarGames = this.recommender.getSimilarTo(game, limit);
         assertFalse(similarGames.isEmpty());
         assertFalse(similarGames.contains(game));
-        assertEquals("Mare Mediterraneum", similarGames.get(0).name());
-        assertEquals("WestFront", similarGames.get(1).name());
+        assertEquals("Twilight Imperium", similarGames.get(0).name());
+        assertEquals("Schoko & Co.", similarGames.get(1).name());
     }
 
     @Test

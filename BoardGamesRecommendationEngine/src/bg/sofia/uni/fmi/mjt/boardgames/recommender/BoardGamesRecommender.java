@@ -67,7 +67,7 @@ public class BoardGamesRecommender implements Recommender {
 
     @Override
     public Collection<BoardGame> getGames() {
-        return List.copyOf(this.games);
+        return Collections.unmodifiableList(this.games);
     }
 
     @Override
@@ -78,9 +78,20 @@ public class BoardGamesRecommender implements Recommender {
 
         return this.games.stream()
                 .filter(i -> !game.equals(i))
+                .filter(i -> hasCommonCategory(game, i))
                 .sorted(Comparator.comparingDouble(g -> getSimilarityIndex(game, g)))
                 .limit(n)
                 .collect(Collectors.toList());
+    }
+
+    boolean hasCommonCategory(BoardGame srcGame, BoardGame toCheck) {
+        List<String> cpy = List.copyOf(toCheck.categories());
+        for (String category : cpy) {
+            if (srcGame.categories().contains(category)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     @Override
