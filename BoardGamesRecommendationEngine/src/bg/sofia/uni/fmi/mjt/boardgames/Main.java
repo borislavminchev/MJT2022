@@ -12,7 +12,7 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
 public class Main {
-    public static final int LIMIT = 100;
+    public static final int LIMIT = 10;
 
     public static void main(String[] args) {
         BoardGamesRecommender recommender = new BoardGamesRecommender(Path.of("data/data.zip"),
@@ -20,9 +20,8 @@ public class Main {
                 Path.of("data/stopwords.txt") );
         StatisticsAnalyzer analyzer = new BoardGamesStatisticsAnalyzer(recommender.getGames());
         BoardGame g = new ArrayList<>(recommender.getGames()).get(0);
-        System.out.println(recommender.getSimilarTo(g, LIMIT).stream()
-                .map(i -> i.toString())
-                .collect(Collectors.joining("\n")));
+        System.out.println(recommender.getByDescription("Die")
+                .stream().limit(LIMIT).map(i -> i.toString()).collect(Collectors.joining("\n")));
 
 //        try (ZipFile zipFile = new ZipFile("data/data.zip")) {
 //            ZipEntry entry = zipFile.entries().asIterator().next();

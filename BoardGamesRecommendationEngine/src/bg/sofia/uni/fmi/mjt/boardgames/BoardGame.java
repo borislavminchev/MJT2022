@@ -44,6 +44,7 @@ public record BoardGame(int id, String name, String description, int maxPlayers,
 
     @Override
     public int hashCode() {
-        return Objects.hash(name, description, maxPlayers, minAge, minPlayers, playingTimeMins, categories, mechanics);
+        return Objects.hash(id, name, description, maxPlayers,
+                minAge, minPlayers, playingTimeMins, categories, mechanics);
     }
 }

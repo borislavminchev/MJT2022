@@ -10,11 +10,19 @@ public class BoardGamesStatisticsAnalyzer implements StatisticsAnalyzer {
     private final List<BoardGame> games;
 
     public BoardGamesStatisticsAnalyzer(Collection<BoardGame> games) {
+        if (games == null) {
+            throw new IllegalArgumentException("Games cannot be null");
+        }
+
         this.games = new ArrayList<>(games);
     }
 
     @Override
     public List<String> getNMostPopularCategories(int n) {
+        if (n <= 0) {
+            throw new IllegalArgumentException("Argument should be positive");
+        }
+
         Map<String, Integer> categoriesCount = new HashMap<>();
         for (BoardGame game : games) {
             List<String> categories = List.copyOf(game.categories());

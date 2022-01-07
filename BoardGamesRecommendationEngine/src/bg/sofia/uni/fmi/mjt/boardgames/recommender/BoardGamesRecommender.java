@@ -25,6 +25,11 @@ public class BoardGamesRecommender implements Recommender {
      * @param stopwordsFile   the stopwords file
      */
     public BoardGamesRecommender(Path datasetZipFile, String datasetFileName, Path stopwordsFile) {
+        if (datasetZipFile == null || datasetFileName == null
+                || datasetFileName.isEmpty() || stopwordsFile == null) {
+            throw new IllegalArgumentException("Arguments cannot be null or empty");
+        }
+
         try (ZipFile zipFile = new ZipFile(datasetZipFile.toString())) {
             for (Iterator<? extends ZipEntry> it = zipFile.entries().asIterator(); it.hasNext(); ) {
                 ZipEntry entry = it.next();
@@ -51,6 +56,10 @@ public class BoardGamesRecommender implements Recommender {
      * @param stopwords Reader from which the stopwords list can be read
      */
     public BoardGamesRecommender(Reader dataset, Reader stopwords) {
+        if (dataset == null || stopwords == null) {
+            throw new IllegalArgumentException("DatasetReader and stopwords reader cannot be null");
+        }
+
         this.games = loadGames(dataset);
         this.stopwords = retriveStopwords(stopwords);
         this.wordsGameIdx = loadWords(this.games);
@@ -63,6 +72,10 @@ public class BoardGamesRecommender implements Recommender {
 
     @Override
     public List<BoardGame> getSimilarTo(BoardGame game, int n) {
+        if (game == null || n <= 0) {
+            throw new IllegalArgumentException("Game cannot be null and N  should be positive");
+        }
+
         return this.games.stream()
                 .filter(i -> !game.equals(i))
                 .sorted(Comparator.comparingDouble(g -> getSimilarityIndex(game, g)))
@@ -72,11 +85,20 @@ public class BoardGamesRecommender implements Recommender {
 
     @Override
     public List<BoardGame> getByDescription(String... keywords) {
+        if (keywords == null) {
+            throw new IllegalArgumentException("Keywords cannot be null");
+        }
+
         List<String> wordList = Stream.of(keywords)
-                .filter(i -> !this.stopwords.contains(i))
+                .filter(i -> i != null)
                 .filter(i -> !i.isEmpty())
+                .filter(i -> !this.stopwords.contains(i))
                 .distinct()
                 .collect(Collectors.toList());
+
+        if (wordList.isEmpty()) {
+            return new ArrayList<>();
+        }
 
         Set<Integer> gamesIdx = new HashSet<>();
         this.wordsGameIdx.entrySet().stream()
@@ -91,6 +113,10 @@ public class BoardGamesRecommender implements Recommender {
 
     @Override
     public void storeGamesIndex(Writer writer) {
+        if (writer == null) {
+            throw new IllegalArgumentException("Writer cannot be null");
+        }
+
         this.wordsGameIdx.entrySet().forEach(i -> writeEntry(i, writer) );
     }
 
