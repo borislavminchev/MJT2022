@@ -69,10 +69,10 @@ public class GameRecommender {
             throw new IllegalArgumentException("N cannot be negative");
         }
 
-        int limit = Math.min(n, this.games.size());
+        //int limit = Math.min(n, this.games.size());
         return this.games.stream()
-                .sorted(Comparator.comparingDouble(Game::user_review))
-                .limit(limit)
+                .sorted(Comparator.comparingDouble(Game::user_review).reversed())
+                .limit(n)
                 .toList();
     }
 
