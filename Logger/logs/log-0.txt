@@ -1,0 +1,2 @@
+[INFO]|2022-01-07T17:22:40.551548300|package bg.sofia.uni.fmi.mjt.logger|My messageeee1!!!!!
+[INFO]|2022-01-07T17:22:40.562550400|package bg.sofia.uni.fmi.mjt.logger|My messageeee2!!!!!

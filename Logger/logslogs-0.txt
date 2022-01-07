@@ -1,1 +1,0 @@
-[INFO]|2021-11-27T12:49:32.422050200|package bg.sofia.uni.fmi.mjt.logger|My messageeee!!!!!

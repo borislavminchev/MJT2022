@@ -14,8 +14,10 @@ public interface Logger {
      * @param message   log message
      * @throws IllegalArgumentException if {@code level} is null, {@code timestamp} is null
      *                                  or {@code message} is null or empty
-     * @throws LogException             if LoggerOptions.shouldThrowErrors() is true and if the operation cannot be completed
-     *                                  In case LoggerOptions.shouldThrowErrors() is false, the method should suppress any problems
+     * @throws LogException             if LoggerOptions.shouldThrowErrors() is true and
+     * if the operation cannot be completed
+     *                                  In case LoggerOptions.shouldThrowErrors() is false, the
+     *                                  method should suppress any problems
      */
     void log(Level level, LocalDateTime timestamp, String message);
 

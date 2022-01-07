@@ -1,0 +1,7 @@
+[INFO]|2022-01-07T18:02:05.447670500|package bg.sofia.uni.fmi.mjt.logger|My messageeee7!!!!!
+[INFO]|2022-01-07T18:08:49.938344200|package bg.sofia.uni.fmi.mjt.logger|My messageeee1!!!!!
+[INFO]|2022-01-07T18:08:49.944345100|package bg.sofia.uni.fmi.mjt.logger|My messageeee2!!!!!
+[INFO]|2022-01-07T18:08:49.945344|package bg.sofia.uni.fmi.mjt.logger|My messageeee4!!!!!
+[INFO]|2022-01-07T18:08:49.945344|package bg.sofia.uni.fmi.mjt.logger|My messageeee5!!!!!
+[INFO]|2022-01-07T18:08:49.945344|package bg.sofia.uni.fmi.mjt.logger|My messageeee6!!!!!
+[INFO]|2022-01-07T18:08:49.946343100|package bg.sofia.uni.fmi.mjt.logger|My messageeee7!!!!!
