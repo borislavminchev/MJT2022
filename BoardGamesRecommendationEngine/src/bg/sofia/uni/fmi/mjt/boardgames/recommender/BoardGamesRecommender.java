@@ -84,16 +84,6 @@ public class BoardGamesRecommender implements Recommender {
                 .collect(Collectors.toList());
     }
 
-    boolean hasCommonCategory(BoardGame srcGame, BoardGame toCheck) {
-        List<String> cpy = List.copyOf(toCheck.categories());
-        for (String category : cpy) {
-            if (srcGame.categories().contains(category)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
     @Override
     public List<BoardGame> getByDescription(String... keywords) {
         if (keywords == null) {
@@ -129,6 +119,16 @@ public class BoardGamesRecommender implements Recommender {
         }
 
         this.wordsGameIdx.entrySet().forEach(i -> writeEntry(i, writer) );
+    }
+
+    private boolean hasCommonCategory(BoardGame srcGame, BoardGame toCheck) {
+        List<String> cpy = List.copyOf(toCheck.categories());
+        for (String category : cpy) {
+            if (srcGame.categories().contains(category)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     private double getSimilarityIndex(BoardGame game1, BoardGame game2) {
