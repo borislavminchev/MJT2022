@@ -12,7 +12,6 @@ import java.util.zip.ZipFile;
 
 public class BoardGamesRecommender implements Recommender {
 
-
     private List<BoardGame> games;
     private List<String> stopwords;
     private Map<String, Set<Integer>> wordsGameIdx;
@@ -72,8 +71,12 @@ public class BoardGamesRecommender implements Recommender {
 
     @Override
     public List<BoardGame> getSimilarTo(BoardGame game, int n) {
-        if (game == null || n <= 0) {
-            throw new IllegalArgumentException("Game cannot be null and N  should be positive");
+        if (game == null || n < 0) {
+            throw new IllegalArgumentException("Game cannot be null and N cannot be negative");
+        }
+
+        if (n == 0) {
+            return new ArrayList<>();
         }
 
         return this.games.stream()
@@ -118,7 +121,7 @@ public class BoardGamesRecommender implements Recommender {
             throw new IllegalArgumentException("Writer cannot be null");
         }
 
-        this.wordsGameIdx.entrySet().forEach(i -> writeEntry(i, writer) );
+        this.wordsGameIdx.entrySet().forEach(i -> writeEntry(i, writer));
     }
 
     private boolean hasCommonCategory(BoardGame srcGame, BoardGame toCheck) {
@@ -147,7 +150,7 @@ public class BoardGamesRecommender implements Recommender {
     private double getStringDistance(Collection<String> list1, Collection<String> list2) {
         List<String> combined = Stream.concat(list1.stream(), list2.stream()).collect(Collectors.toList());
 
-        List<String>  common = list1.stream()
+        List<String> common = list1.stream()
                 .filter(list2::contains)
                 .collect(Collectors.toList());
 
@@ -185,7 +188,7 @@ public class BoardGamesRecommender implements Recommender {
             String firstLine = reader.lines().limit(1).toList().get(0);
 
             games = reader.lines()
-                    .map(i->BoardGame.of(i, firstLine))
+                    .map(i -> BoardGame.of(i, firstLine))
                     .collect(Collectors.toList());
 
         } catch (IOException e) {

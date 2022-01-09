@@ -22,7 +22,7 @@ class BoardGameInfoExtractorTest {
             "Auction/Bidding,Dice Rolling;Description and other";
 
 
-    private BoardGameInfoExtractor extractor = new BoardGameInfoExtractor(List.of(ARGUMENT_LIST.split(";")));
+    private final BoardGameInfoExtractor extractor = new BoardGameInfoExtractor(List.of(ARGUMENT_LIST.split(";")));
 
     @Test
     public void testConstructing() {

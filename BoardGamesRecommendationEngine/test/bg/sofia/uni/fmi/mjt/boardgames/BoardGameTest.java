@@ -18,7 +18,7 @@ class BoardGameTest {
     @Test
     public void testCreating() {
         BoardGame game = BoardGame.of("1;5;14;3;Demo Name;240;Negotiation;" +
-                        "Auction/Bidding,Dice Rolling;Description and other", ARGUMENT_LIST);
+                "Auction/Bidding,Dice Rolling;Description and other", ARGUMENT_LIST);
         final int expectedId = 1;
         final String expectedName = "Demo Name";
         final String expectedDescription = "Description and other";
@@ -41,7 +41,7 @@ class BoardGameTest {
     @Test
     public void testCreatingWrongArgList() {
         assertThrows(RuntimeException.class, () -> BoardGame.of("1;5;14;3;Demo Name;240;Negotiation;" +
-            "Auction/Bidding,Dice Rolling;Description and other", WRONG_ARGUMENT_LIST));
+                "Auction/Bidding,Dice Rolling;Description and other", WRONG_ARGUMENT_LIST));
     }
 
     @Test

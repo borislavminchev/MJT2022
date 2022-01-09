@@ -16,19 +16,19 @@ class BoardGamesStatisticsAnalyzerTest {
     private final StatisticsAnalyzer analyzer;
 
     BoardGamesStatisticsAnalyzerTest() {
-        Recommender recommender = new BoardGamesRecommender(Path.of("testdata/data.zip"),
-                "data.txt",
-                Path.of("testdata/stopwords.txt"));
+        Recommender recommender = new BoardGamesRecommender(Path.of("data.zip"),
+                "data.csv",
+                Path.of("stopwords.txt"));
         this.analyzer = new BoardGamesStatisticsAnalyzer(recommender.getGames());
     }
 
     @Test
     public void testConstructing() {
-        Recommender recommender = new BoardGamesRecommender(Path.of("testdata/data.zip"),
-                "data.txt",
-                Path.of("testdata/stopwords.txt"));
+        Recommender recommender = new BoardGamesRecommender(Path.of("data.zip"),
+                "data.csv",
+                Path.of("stopwords.txt"));
         assertDoesNotThrow(() -> new BoardGamesStatisticsAnalyzer(recommender.getGames()));
-        assertThrows(IllegalArgumentException.class , () -> new BoardGamesStatisticsAnalyzer(null));
+        assertThrows(IllegalArgumentException.class, () -> new BoardGamesStatisticsAnalyzer(null));
     }
 
     @Test
@@ -53,7 +53,7 @@ class BoardGamesStatisticsAnalyzerTest {
     public void testZeroAveragePlayingTimeByCategory() {
         StatisticsAnalyzer statisticsAnalyzer = new BoardGamesStatisticsAnalyzer(new ArrayList<>());
         assertEquals(0, statisticsAnalyzer.getAveragePlayingTimeByCategory("not included"));
-        assertEquals(0, statisticsAnalyzer.getAveragePlayingTimeByCategory(null));
+        assertThrows(IllegalArgumentException.class, () -> statisticsAnalyzer.getAveragePlayingTimeByCategory(null));
     }
 
     @Test
@@ -69,10 +69,10 @@ class BoardGamesStatisticsAnalyzerTest {
         final int numberCategories = 3;
         List<String> mostPopular = analyzer.getNMostPopularCategories(numberCategories);
         final double expected = 52.25;
-        assertEquals("Wargame" , mostPopular.get(0));
-        assertEquals("Card Game" , mostPopular.get(1));
+        assertEquals("Wargame", mostPopular.get(0));
+        assertEquals("Card Game", mostPopular.get(1));
 
-        assertThrows(IllegalArgumentException.class, () -> analyzer.getNMostPopularCategories(0));
+        assertTrue(analyzer.getNMostPopularCategories(0).isEmpty());
         assertThrows(IllegalArgumentException.class, () -> analyzer.getNMostPopularCategories(-1));
     }
 

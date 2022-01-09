@@ -4,6 +4,8 @@ import java.util.Collection;
 import java.util.List;
 
 public class BoardGameInfoExtractor {
+    private static final int NUM_ARGUMENTS = 9;
+    private static final String INSIDE_ARGUMENT_DELIMITER = ",";
     private int idIdx;
     private int nameIdx;
     private int descriptionIdx;
@@ -13,9 +15,6 @@ public class BoardGameInfoExtractor {
     private int playingTimeIdx;
     private int categoriesIdx;
     private int mechanicsIdx;
-
-    public static final int NUM_ARGUMENTS = 9;
-    public static final String INSIDE_ARGUMENT_DELIMITER = ",";
 
 
     BoardGameInfoExtractor(List<String> argumentNames) {

@@ -19,8 +19,12 @@ public class BoardGamesStatisticsAnalyzer implements StatisticsAnalyzer {
 
     @Override
     public List<String> getNMostPopularCategories(int n) {
-        if (n <= 0) {
-            throw new IllegalArgumentException("Argument should be positive");
+        if (n < 0) {
+            throw new IllegalArgumentException("Argument cannot be negative");
+        }
+
+        if (n == 0) {
+            return new ArrayList<>();
         }
 
         Map<String, Integer> categoriesCount = new HashMap<>();
@@ -53,6 +57,10 @@ public class BoardGamesStatisticsAnalyzer implements StatisticsAnalyzer {
 
     @Override
     public double getAveragePlayingTimeByCategory(String category) {
+        if (category == null || category.isEmpty()) {
+            throw new IllegalArgumentException("Category cannot be null or empty");
+        }
+
         return this.games.stream()
                 .filter(i -> i.categories().contains(category))
                 .mapToInt(i -> i.playingTimeMins())

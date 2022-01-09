@@ -13,31 +13,31 @@ import static org.junit.jupiter.api.Assertions.*;
 
 
 class BoardGamesRecommenderTest {
-    private final Recommender recommender = new BoardGamesRecommender(Path.of("testdata/data.zip"),
-            "data.txt",
-            Path.of("testdata/stopwords.txt"));
+    private final Recommender recommender = new BoardGamesRecommender(Path.of("data.zip"),
+            "data.csv",
+            Path.of("stopwords.txt"));
 
     @Test
     void testConstructingFirstConstructor() {
-        assertDoesNotThrow(() -> new BoardGamesRecommender(Path.of("testdata/data.zip"),
-                "data.txt",
-                Path.of("testdata/stopwords.txt")));
-        assertThrows(RuntimeException.class, () -> new BoardGamesRecommender(Path.of("testdata/data.zip"),
-                "data123.txt",
-                Path.of("testdata/stopwords.txt")));
+        assertDoesNotThrow(() -> new BoardGamesRecommender(Path.of("data.zip"),
+                "data.csv",
+                Path.of("stopwords.txt")));
+        assertThrows(RuntimeException.class, () -> new BoardGamesRecommender(Path.of("data.zip"),
+                "data123.csv",
+                Path.of("stopwords.txt")));
 
         assertThrows(IllegalArgumentException.class, () ->
-                new BoardGamesRecommender(null, "data.txt", Path.of("testdata/stopwords.txt")));
+                new BoardGamesRecommender(null, "data.csv", Path.of("stopwords.txt")));
         assertThrows(IllegalArgumentException.class, () ->
-                new BoardGamesRecommender(Path.of("testdata/data.zip"), "data.txt", null));
+                new BoardGamesRecommender(Path.of("data.zip"), "data.csv", null));
         assertThrows(IllegalArgumentException.class, () ->
-                new BoardGamesRecommender(Path.of("testdata/data.zip"), "", null));
+                new BoardGamesRecommender(Path.of("data.zip"), "", null));
     }
 
     @Test
     void testConstructingSecondConstructor() throws FileNotFoundException {
-        InputStreamReader dataReader = new InputStreamReader(new FileInputStream("testdata/datafile.txt"));
-        InputStreamReader stopwordReader = new InputStreamReader(new FileInputStream("testdata/stopwords.txt"));
+        InputStreamReader dataReader = new InputStreamReader(new FileInputStream("data.csv"));
+        InputStreamReader stopwordReader = new InputStreamReader(new FileInputStream("stopwords.txt"));
 
         Recommender recom = new BoardGamesRecommender(dataReader, stopwordReader);
 
@@ -102,7 +102,7 @@ class BoardGamesRecommenderTest {
         assertEquals("Elfenland", sameGames.get(0).name());
 
         assertFalse(wantedGames.stream()
-                .filter(i->i.name().equals("Die Macher"))
+                .filter(i -> i.name().equals("Die Macher"))
                 .collect(Collectors.toList())
                 .isEmpty());
     }
