@@ -36,7 +36,7 @@ public class RequestExecutor {
                 args.remove(0);
                 args.remove(0);
                 return executeGetAll(args);
-            }else if (arguments[1].equals("by-name")) {
+            } else if (arguments[1].equals("by-name")) {
                 List<String> args = new ArrayList<>(List.of(arguments));
                 args.remove(0);
                 args.remove(0);

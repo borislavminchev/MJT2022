@@ -27,7 +27,7 @@ public class DefaultCocktailStorage implements CocktailStorage {
 
     @Override
     public Collection<Cocktail> getCocktails() {
-        return List.copyOf(cocktails);
+        return cocktails;
     }
 
     @Override
