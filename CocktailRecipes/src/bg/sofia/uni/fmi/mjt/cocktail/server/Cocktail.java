@@ -16,4 +16,12 @@ public record Cocktail(String name, Set<Ingredient> ingredients) {
     public int hashCode() {
         return Objects.hash(name);
     }
+
+    @Override
+    public String toString() {
+        return "{" +
+                "\"name\":\"" + name + '\"' +
+                ", \"ingredients\":" + ingredients +
+                '}';
+    }
 }

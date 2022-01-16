@@ -1,5 +1,7 @@
 package bg.sofia.uni.fmi.mjt.cocktail.server;
 
+import bg.sofia.uni.fmi.mjt.cocktail.server.storage.DefaultCocktailStorage;
+
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -11,11 +13,6 @@ public class Server {
     private static final int MAX_EXECUTOR_THREADS = 10;
 
     public static void main(String[] args) {
-//        create <cocktail_name> [<ingredient_name>=<ingredient_amount> ...]
-//        get all
-//        get by-name <cocktail_name>
-//        get by-ingredient <ingredient_name>
-//        disconnect
         ExecutorService executor = Executors.newFixedThreadPool(MAX_EXECUTOR_THREADS);
 
         try (ServerSocket serverSocket = new ServerSocket(SERVER_PORT);) {
@@ -35,7 +32,8 @@ public class Server {
 
                 // We want each client to be processed in a separate thread
                 // to keep the current thread free to accept() requests from new clients
-                ClientRequestHandler clientHandler = new ClientRequestHandler(clientSocket);
+                ClientRequestHandler clientHandler = new ClientRequestHandler(clientSocket,
+                        new RequestExecutor(new DefaultCocktailStorage()));
 
                 // uncomment the line below to launch a thread manually
                 // new Thread(clientHandler).start();

@@ -23,7 +23,8 @@ public class Client {
                 System.out.print("Enter message: ");
                 String message = scanner.nextLine(); // read a line from the console
 
-                if ("quit".equals(message)) {
+                if ("disconnect".equals(message)) {
+                    System.out.println("Disconnected from the server");
                     break;
                 }
 
@@ -32,7 +33,7 @@ public class Client {
                 writer.println(message); // send the message to the server
 
                 String reply = reader.readLine(); // read the response from the server
-                System.out.println("The server replied <" + reply + ">");
+                System.out.println(reply);
             }
 
         } catch (IOException e) {

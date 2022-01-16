@@ -8,9 +8,10 @@ import java.net.Socket;
 
 public class ClientRequestHandler implements Runnable {
     private Socket socket;
-
-    public ClientRequestHandler(Socket socket) {
+    private RequestExecutor executor;
+    public ClientRequestHandler(Socket socket, RequestExecutor executor) {
         this.socket = socket;
+        this.executor = executor;
     }
 
     @Override
@@ -21,7 +22,8 @@ public class ClientRequestHandler implements Runnable {
             String inputLine;
             while ((inputLine = in.readLine()) != null) { // read the message from the client
                 System.out.println("Message received from client: " + inputLine);
-                out.println("Echo " + inputLine); // send response back to the client
+                ResponseObject response = executor.execute(inputLine);
+                out.println(response.toString()); // send response back to the client
             }
 
         } catch (IOException e) {
