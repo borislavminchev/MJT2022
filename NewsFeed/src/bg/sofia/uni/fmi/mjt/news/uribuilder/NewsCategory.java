@@ -1,4 +1,4 @@
-package bg.sofia.uni.fmi.mjt.news;
+package bg.sofia.uni.fmi.mjt.news.uribuilder;
 
 public enum NewsCategory {
     BUSINESS("business"),

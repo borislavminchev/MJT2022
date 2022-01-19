@@ -1,4 +1,4 @@
-package bg.sofia.uni.fmi.mjt.news;
+package bg.sofia.uni.fmi.mjt.news.response;
 
 import java.net.URL;
 
