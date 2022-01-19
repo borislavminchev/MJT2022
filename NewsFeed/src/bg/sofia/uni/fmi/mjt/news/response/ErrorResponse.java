@@ -1,10 +1,7 @@
 package bg.sofia.uni.fmi.mjt.news.response;
 
-import com.google.gson.annotations.Expose;
-import com.google.gson.annotations.SerializedName;
-
 public class ErrorResponse implements Response {
-    private Status status;
+    private final Status status;
     private String code;
     private String message;
 
@@ -23,17 +20,17 @@ public class ErrorResponse implements Response {
         return code;
     }
 
-//    public void setCode(String code) {
-//        this.code = code;
-//    }
+    public void setCode(String code) {
+        this.code = code;
+    }
 
     public String getMessage() {
         return message;
     }
 
-//    public void setMessage(String message) {
-//        this.message = message;
-//    }
+    public void setMessage(String message) {
+        this.message = message;
+    }
 
     @Override
     public boolean isCorrect() {

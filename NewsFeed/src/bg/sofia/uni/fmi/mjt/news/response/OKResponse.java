@@ -1,13 +1,9 @@
 package bg.sofia.uni.fmi.mjt.news.response;
 
-import com.google.gson.annotations.Expose;
-import com.google.gson.annotations.SerializedName;
 import java.util.List;
 
 public class OKResponse implements Response {
-
-//    @Expose(serialize = false)
-    private Status status;
+    private final Status status;
     private Integer totalResults;
     private List<Entity> articles;
 
@@ -22,21 +18,22 @@ public class OKResponse implements Response {
         return status;
     }
 
-//    @Override
-//    public void setStatus(Status status) {
-//        if (status != Status.OK) {
-//            throw new RuntimeException("Cannot set status: " + status + " to OkResponse");
-//        }
-//        this.status = status;
-//    }
-
     public int getTotalResults() {
         return totalResults.intValue();
+    }
+
+    public void setTotalResults(Integer totalResults) {
+        this.totalResults = totalResults;
     }
 
     public List<Entity> getArticles() {
         return articles;
     }
+
+    public void setArticles(List<Entity> articles) {
+        this.articles = articles;
+    }
+
 
     @Override
     public boolean isCorrect() {
