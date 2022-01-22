@@ -2,8 +2,8 @@ package bg.sofia.uni.fmi.mjt.news.response;
 
 public class ErrorResponse implements Response {
     private final Status status;
-    private String code;
-    private String message;
+    private final String code;
+    private final String message;
 
     public ErrorResponse(String code, String message) {
         this.status = Status.ERROR;
@@ -20,16 +20,8 @@ public class ErrorResponse implements Response {
         return code;
     }
 
-    public void setCode(String code) {
-        this.code = code;
-    }
-
     public String getMessage() {
         return message;
-    }
-
-    public void setMessage(String message) {
-        this.message = message;
     }
 
     @Override

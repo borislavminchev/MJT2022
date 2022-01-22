@@ -1,37 +1,33 @@
-package bg.sofia.uni.fmi.mjt.news;
+package bg.sofia.uni.fmi.mjt.news.parser;
 
-import bg.sofia.uni.fmi.mjt.news.response.OKResponse;
 import bg.sofia.uni.fmi.mjt.news.response.Response;
 import com.google.gson.*;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.Type;
-import java.net.URI;
-import java.util.List;
-import java.util.Map;
+import java.net.http.HttpResponse;
 import java.util.Optional;
 
 public class ResponseParser {
-    private String response;
+    private HttpResponse<String> response;
 
-    public ResponseParser(String response) {
+    private ResponseParser(HttpResponse<String> response) {
         if (response == null) {
             throw new RuntimeException("Response cannot be null");
         }
         this.response = response;
     }
 
-    public void setResponse(String response) {
+    private ResponseParser() { }
+
+    public static ResponseParser createNew(HttpResponse<String> response) {
         if (response == null) {
             throw new RuntimeException("Response cannot be null");
         }
-        this.response = response;
+        return new ResponseParser(response);
     }
 
     public <T extends Response> Optional<T> parseTo(Class<T> c) {
         Gson gson = new GsonBuilder().create();
-//        if (map.get("status").toString().equals(""))
-        T t = gson.fromJson(this.response, c);
+        T t = gson.fromJson(this.response.body(), c);
 
         Optional<T> res = Optional.empty();
 

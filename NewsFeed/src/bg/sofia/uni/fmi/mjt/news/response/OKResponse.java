@@ -4,10 +4,10 @@ import java.util.List;
 
 public class OKResponse implements Response {
     private final Status status;
-    private Integer totalResults;
-    private List<Entity> articles;
+    private final Integer totalResults;
+    private final List<NewsEntity> articles;
 
-    public OKResponse(int totalResults, List<Entity> articles) {
+    public OKResponse(int totalResults, List<NewsEntity> articles) {
         this.status = Status.OK;
         this.totalResults = totalResults;
         this.articles = articles;
@@ -22,18 +22,9 @@ public class OKResponse implements Response {
         return totalResults.intValue();
     }
 
-    public void setTotalResults(Integer totalResults) {
-        this.totalResults = totalResults;
-    }
-
-    public List<Entity> getArticles() {
+    public List<NewsEntity> getArticles() {
         return articles;
     }
-
-    public void setArticles(List<Entity> articles) {
-        this.articles = articles;
-    }
-
 
     @Override
     public boolean isCorrect() {
