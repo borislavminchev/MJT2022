@@ -7,8 +7,6 @@ import java.io.IOException;
 import java.util.Collection;
 
 public interface NewsRetriever {
-
-
     UriBuilder where();
     NewsRetriever then() throws IOException, InterruptedException;
     Collection<NewsEntity> retrieveTopN(int n);
