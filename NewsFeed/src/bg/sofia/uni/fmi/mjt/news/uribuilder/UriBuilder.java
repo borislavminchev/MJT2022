@@ -8,6 +8,7 @@ import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class UriBuilder {
     private static final String API_KEY = "8d1153d6a324436e8690e4ed521d3716";
@@ -18,9 +19,7 @@ public class UriBuilder {
     private Integer pageSize;
     private Integer page;
 
-    public UriBuilder() {
-        this.keywords = new ArrayList<>();
-    }
+    public UriBuilder() { }
 
     public static UriBuilder newBuilder() {
         return new UriBuilder();
@@ -54,7 +53,8 @@ public class UriBuilder {
         if (keywords == null) {
             throw new RuntimeException("Trying to set wrong keywords list(empty or null)");
         }
-        this.keywords = new ArrayList<>(List.of(keywords));
+        List<String> words = Stream.of(keywords).filter(i -> i != null).filter(i -> !i.isEmpty()).toList();
+        this.keywords = new ArrayList<>(words);
         return this;
     }
 
@@ -80,12 +80,15 @@ public class UriBuilder {
     }
 
     public URI build() throws URISyntaxException {
+        if (this.keywords == null || this.keywords.isEmpty()) {
+            throw new RuntimeException("Keywords field was not set");
+        }
         return new URI("https", "newsapi.org", "/v2/top-headlines",
                 this.getQuery(), null);
     }
 
-    public NewsRetriever retrieve() throws URISyntaxException {
-        return StandardNewsRetriever.create(this.build());
+    public NewsRetriever retrieve() {
+        return StandardNewsRetriever.create(this);
     }
 
     private String getQuery() {

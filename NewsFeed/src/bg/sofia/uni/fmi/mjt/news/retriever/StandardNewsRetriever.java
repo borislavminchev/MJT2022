@@ -9,8 +9,6 @@ import bg.sofia.uni.fmi.mjt.news.uribuilder.UriBuilder;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.Writer;
-import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
@@ -20,12 +18,12 @@ import java.util.List;
 
 public class StandardNewsRetriever implements NewsRetriever {
 
-    private URI uri;
+    private UriBuilder uri;
     private List<NewsEntity> news;
 
     private StandardNewsRetriever() { }
 
-    private StandardNewsRetriever(URI uri) {
+    private StandardNewsRetriever(UriBuilder uri) {
         if (uri == null) {
             throw new RuntimeException("Uri cannot be null");
         }
@@ -33,16 +31,11 @@ public class StandardNewsRetriever implements NewsRetriever {
     }
 
     public static NewsRetriever createDefault() {
-        URI uri = null;
-        try {
-            uri = UriBuilder.newBuilder().build();
-        } catch (URISyntaxException e) {
-            throw new RuntimeException(e.getMessage());
-        }
+        UriBuilder uri = UriBuilder.newBuilder();
         return new StandardNewsRetriever(uri);
     }
 
-    public static NewsRetriever create(URI uri) {
+    public static NewsRetriever create(UriBuilder uri) {
         return new StandardNewsRetriever(uri);
     }
 
@@ -52,9 +45,9 @@ public class StandardNewsRetriever implements NewsRetriever {
     }
 
     @Override
-    public NewsRetriever then() throws IOException, InterruptedException {
+    public NewsRetriever then() throws IOException, InterruptedException, URISyntaxException {
         HttpClient client = HttpClient.newBuilder().build();
-        HttpResponse<String> str = client.send(HttpRequest.newBuilder(uri).build(),
+        HttpResponse<String> str = client.send(HttpRequest.newBuilder(uri.build()).build(),
                 HttpResponse.BodyHandlers.ofString());
 
         OKResponse r = ResponseParser.createNew(str).parseTo(OKResponse.class).orElseThrow(() -> {
@@ -101,13 +94,5 @@ public class StandardNewsRetriever implements NewsRetriever {
                 .append(entity.getUrl() + "\n")
                 .append(entity.getUrlToImage() + "\n")
                 .append("\n\n").toString();
-    }
-
-    private void writeEntity(NewsEntity entity, String filePath) {
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath, true))) {
-            writer.write(formatEntity(entity));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
     }
 }
