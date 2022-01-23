@@ -28,13 +28,4 @@ public class ErrorResponse implements Response {
     public boolean isCorrect() {
         return this.status.getValue().equals("error") && this.code != null && this.status != null;
     }
-
-    @Override
-    public String toString() {
-        return "{" +
-                "status='" + this.status.getValue() + '\'' +
-                ", code='" + code + '\'' +
-                ", message='" + message + '\'' +
-                '}';
-    }
 }

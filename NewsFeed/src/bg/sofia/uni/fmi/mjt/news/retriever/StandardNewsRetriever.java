@@ -20,6 +20,8 @@ public class StandardNewsRetriever implements NewsRetriever {
 
     private UriBuilder uri;
     private List<NewsEntity> news;
+    private HttpClient client;
+
 
     private StandardNewsRetriever() { }
 
@@ -28,6 +30,17 @@ public class StandardNewsRetriever implements NewsRetriever {
             throw new RuntimeException("Uri cannot be null");
         }
         this.uri = uri;
+        client = HttpClient.newBuilder().build();
+    }
+
+    @Override
+    public HttpClient getClient() {
+        return this.client;
+    }
+
+    @Override
+    public UriBuilder getUriBuilder() {
+        return this.uri;
     }
 
     public static NewsRetriever createDefault() {
@@ -46,8 +59,7 @@ public class StandardNewsRetriever implements NewsRetriever {
 
     @Override
     public NewsRetriever then() throws IOException, InterruptedException, URISyntaxException {
-        HttpClient client = HttpClient.newBuilder().build();
-        HttpResponse<String> str = client.send(HttpRequest.newBuilder(uri.build()).build(),
+        HttpResponse<String> str = this.getClient().send(HttpRequest.newBuilder(this.getUriBuilder().build()).build(),
                 HttpResponse.BodyHandlers.ofString());
 
         OKResponse r = ResponseParser.createNew(str).parseTo(OKResponse.class).orElseThrow(() -> {

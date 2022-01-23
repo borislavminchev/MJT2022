@@ -23,20 +23,11 @@ public class OKResponse implements Response {
     }
 
     public List<NewsEntity> getArticles() {
-        return articles;
+        return List.copyOf(articles);
     }
 
     @Override
     public boolean isCorrect() {
         return this.status.getValue().equals("ok") && this.totalResults != null && this.articles != null;
-    }
-
-    @Override
-    public String toString() {
-        return "{" +
-                "status='" + this.status.getValue() + '\'' +
-                ", totalResults=" + totalResults.intValue() +
-                ", articles=" + articles +
-                '}';
     }
 }

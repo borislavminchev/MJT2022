@@ -55,18 +55,4 @@ public class NewsEntity {
     public String getContent() {
         return content;
     }
-
-    @Override
-    public String toString() {
-        return "{" +
-                "source=" + source +
-                ", author='" + author + '\'' +
-                ", title='" + title + '\'' +
-                ", description='" + description + '\'' +
-                ", url=" + url +
-                ", urlToImage=" + urlToImage +
-                ", publishedAt='" + publishedAt + '\'' +
-                ", content='" + content + '\'' +
-                '}';
-    }
 }

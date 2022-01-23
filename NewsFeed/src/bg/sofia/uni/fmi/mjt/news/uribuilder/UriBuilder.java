@@ -14,10 +14,7 @@ public class UriBuilder {
     private static final String API_KEY = "8d1153d6a324436e8690e4ed521d3716";
     private CountryCode country;
     private NewsCategory category;
-    private String sources;
     private List<String> keywords;
-    private Integer pageSize;
-    private Integer page;
 
     public UriBuilder() { }
 
@@ -41,41 +38,15 @@ public class UriBuilder {
         return this;
     }
 
-    public UriBuilder sources(String sources) {
-        if (sources == null || sources.isEmpty()) {
-            throw new RuntimeException("Sources to set cannot be null or empty");
-        }
-        this.sources = sources;
-        return this;
-    }
-
     public UriBuilder keywords(String... keywords) {
         if (keywords == null) {
             throw new RuntimeException("Trying to set wrong keywords list(empty or null)");
         }
-        List<String> words = Stream.of(keywords).filter(i -> i != null).filter(i -> !i.isEmpty()).toList();
+        List<String> words = Stream.of(keywords).filter(i -> i != null).filter(i -> !i.isEmpty()).distinct().toList();
+        if (words.isEmpty()) {
+            throw new RuntimeException("Trying to set wrong keywords list(empty or null)");
+        }
         this.keywords = new ArrayList<>(words);
-        return this;
-    }
-
-    public UriBuilder pageSize(Integer pageSize) {
-        final int maxPageSize = 100;
-        if (pageSize == null) {
-            throw new RuntimeException("Page size to set cannot be null");
-        } else if (pageSize.intValue() <= 0 || pageSize.intValue() > maxPageSize) {
-            throw new RuntimeException("Page size out of bounds");
-        }
-        this.pageSize = pageSize;
-        return this;
-    }
-
-    public UriBuilder page(Integer page) {
-        if (page == null) {
-            throw new RuntimeException("Page size to set cannot be null");
-        } else if (pageSize.intValue() <= 0) {
-            throw new RuntimeException("Page size out of bounds");
-        }
-        this.page = page;
         return this;
     }
 
@@ -91,15 +62,12 @@ public class UriBuilder {
         return StandardNewsRetriever.create(this);
     }
 
-    private String getQuery() {
+    public String getQuery() {
         StringBuilder builder = new StringBuilder();
         builder.append(country != null ? "country=" + this.country.getValue() + "&" : "")
                 .append(category != null ? "category=" + this.category.getValue() + "&" : "")
-                .append(sources != null ? "sources=" + this.sources + "&" : "")
-                .append(!keywords.isEmpty() ? "q=" +
+                .append((keywords != null && !keywords.isEmpty()) ? "q=" +
                         keywords.stream().collect(Collectors.joining("+")) + "&" : "")
-                .append(pageSize != null ? "pageSize=" + this.pageSize.intValue() + "&" : "")
-                .append(page != null ? "page=" + this.page.intValue() + "&" : "")
                 .append("apiKey=" + API_KEY);
         return builder.toString();
     }

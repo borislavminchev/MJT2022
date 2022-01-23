@@ -10,7 +10,7 @@
         <entry key="location-1" value="BUNDLED:(bundled):Google Checks" />
         <entry key="location-2" value="HTTP_URL:https://raw.githubusercontent.com/fmi/java-course/master/docs/01-code-analysis-tools/checkstyle/checkstyle.xml:MJT2022" />
         <entry key="scan-before-checkin" value="false" />
-        <entry key="scanscope" value="JavaOnly" />
+        <entry key="scanscope" value="AllSourcesWithTests" />
         <entry key="suppress-errors" value="false" />
       </map>
     </option>

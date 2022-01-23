@@ -19,9 +19,6 @@ public class ResponseParser {
     private ResponseParser() { }
 
     public static ResponseParser createNew(HttpResponse<String> response) {
-        if (response == null) {
-            throw new RuntimeException("Response cannot be null");
-        }
         return new ResponseParser(response);
     }
 
