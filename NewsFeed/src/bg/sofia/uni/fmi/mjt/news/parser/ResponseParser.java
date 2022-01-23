@@ -1,7 +1,8 @@
 package bg.sofia.uni.fmi.mjt.news.parser;
 
 import bg.sofia.uni.fmi.mjt.news.response.Response;
-import com.google.gson.*;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 import java.net.http.HttpResponse;
 import java.util.Optional;
