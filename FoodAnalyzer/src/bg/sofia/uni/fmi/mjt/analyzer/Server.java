@@ -1,5 +1,7 @@
 package bg.sofia.uni.fmi.mjt.analyzer;
 
+import bg.sofia.uni.fmi.mjt.analyzer.api.FoodInfoReceiver;
+
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -16,7 +18,7 @@ public class Server {
         try (ServerSocket serverSocket = new ServerSocket(SERVER_PORT);) {
 
             System.out.println("Server started and listening for connect requests");
-
+            RequestExecutor requestExecutor = new RequestExecutor(new FoodInfoReceiver());
             Socket clientSocket;
 
             while (true) {
@@ -31,13 +33,12 @@ public class Server {
                 // We want each client to be processed in a separate thread
                 // to keep the current thread free to accept() requests from new clients
 
-                //ClientRequestHandler clientHandler = new ClientRequestHandler(clientSocket,
-                        //new RequestExecutor(new DefaultCocktailStorage()));
+                ClientRequestHandler clientHandler = new ClientRequestHandler(clientSocket,requestExecutor);
 
                 // uncomment the line below to launch a thread manually
                 // new Thread(clientHandler).start();
 
-                //executor.execute(clientHandler); // use a thread pool to launch a thread
+                executor.execute(clientHandler); // use a thread pool to launch a thread
             }
         } catch (IOException e) {
             throw new RuntimeException("There is a problem with the server socket", e);

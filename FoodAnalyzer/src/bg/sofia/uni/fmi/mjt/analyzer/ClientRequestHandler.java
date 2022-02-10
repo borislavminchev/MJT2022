@@ -1,12 +1,15 @@
 package bg.sofia.uni.fmi.mjt.analyzer;
 
 import bg.sofia.uni.fmi.mjt.analyzer.api.Response;
+import bg.sofia.uni.fmi.mjt.analyzer.entity.Food;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class ClientRequestHandler implements Runnable {
     private Socket socket;
@@ -26,7 +29,11 @@ public class ClientRequestHandler implements Runnable {
             while ((inputLine = in.readLine()) != null) { // read the message from the client
                 System.out.println("Message received from client: " + inputLine);
                 Response response = executor.execute(inputLine);
-                out.println(response.toString()); // send response back to the client
+                List<Food> foods = response.getFoods();
+
+                String str = foods.stream().map(i -> i.toString()).collect(Collectors.joining("\n"));
+                out.println(str);
+
             }
 
         } catch (IOException e) {

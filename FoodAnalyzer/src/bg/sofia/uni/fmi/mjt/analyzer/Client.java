@@ -31,8 +31,12 @@ public class Client {
 
                 writer.println(message); // send the message to the server
 
-                String reply = reader.readLine(); // read the response from the server
-                System.out.println(reply);
+                String reply;
+                do {
+                    reply = reader.readLine();
+                    System.out.println(reply);
+                } while (reader.ready());
+
             }
 
         } catch (IOException e) {
