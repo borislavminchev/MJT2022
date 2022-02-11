@@ -28,12 +28,21 @@ public class ClientRequestHandler implements Runnable {
             String inputLine;
             while ((inputLine = in.readLine()) != null) { // read the message from the client
                 System.out.println("Message received from client: " + inputLine);
-                Response response = executor.execute(inputLine);
-                List<Food> foods = response.getFoods();
+                Response response = null;
+                try {
+                    response = executor.execute(inputLine);
+                } catch (Exception e) {
+                    out.println("Error occurred: " + e.getMessage());
+                }
 
-                String str = foods.stream().map(i -> i.toString()).collect(Collectors.joining("\n"));
-                out.println(str);
+                if (response == null) {
+                    out.println("No information retrieved from command: " + inputLine);
+                } else {
+                    List<Food> foods = response.getFoods();
 
+                    String str = foods.stream().map(i -> i.toString()).collect(Collectors.joining("\n"));
+                    out.println(str);
+                }
             }
 
         } catch (IOException e) {

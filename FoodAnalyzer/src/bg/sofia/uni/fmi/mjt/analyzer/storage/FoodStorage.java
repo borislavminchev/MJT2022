@@ -3,6 +3,7 @@ package bg.sofia.uni.fmi.mjt.analyzer.storage;
 import bg.sofia.uni.fmi.mjt.analyzer.entity.Food;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class FoodStorage {
@@ -30,7 +31,10 @@ public class FoodStorage {
         return this.foods.get(id);
     }
 
-    public  Food getFoodByGtinUpc(String gtinUpc) {
-        return this.gtinUpcFoods.get(gtinUpc);
+    public List<Food> getFoodsByGtinUpc(String gtinUpc) {
+        return this.gtinUpcFoods.entrySet().stream()
+                .filter(i -> i.getKey().equals(gtinUpc))
+                .map(i -> i.getValue())
+                .toList();
     }
 }
