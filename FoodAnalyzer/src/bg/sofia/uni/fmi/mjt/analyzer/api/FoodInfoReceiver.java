@@ -2,14 +2,7 @@ package bg.sofia.uni.fmi.mjt.analyzer.api;
 
 import bg.sofia.uni.fmi.mjt.analyzer.entity.Food;
 import bg.sofia.uni.fmi.mjt.analyzer.storage.FoodStorage;
-import com.google.gson.Gson;
 
-import java.io.IOException;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.net.http.HttpClient;
-import java.net.http.HttpRequest;
-import java.net.http.HttpResponse;
 import java.util.List;
 
 public class FoodInfoReceiver {
@@ -23,7 +16,9 @@ public class FoodInfoReceiver {
     public synchronized Response getFood(String query) {
         Response r = RequestSender.getFoodsByQuery(query);
         List<Food> foods = r.getFoods();
-        foods.forEach(i -> storage.addFood(i));
+        if (!foods.isEmpty()) {
+            foods.forEach(i -> storage.addFood(i));
+        }
         return r;
     }
 

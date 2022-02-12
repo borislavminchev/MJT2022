@@ -50,7 +50,7 @@ public class Food {
                 "fdcId=" + fdcId +
                 ", gtinUpc='" + gtinUpc + '\'' +
                 ", description='" + description + '\'' +
-                ", foodNutrients=" + foodNutrients +
+                (hasReportInfo()? ", foodNutrients=" + foodNutrients : "") +
                 '}';
     }
 }

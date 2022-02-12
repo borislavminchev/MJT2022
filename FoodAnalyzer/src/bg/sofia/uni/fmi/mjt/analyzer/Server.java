@@ -7,6 +7,9 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.logging.FileHandler;
+import java.util.logging.Logger;
+import java.util.logging.SimpleFormatter;
 
 public class Server {
     private static final int SERVER_PORT = 7777;
@@ -14,6 +17,16 @@ public class Server {
 
     public static void main(String[] args) {
         ExecutorService executor = Executors.newFixedThreadPool(MAX_EXECUTOR_THREADS);
+        Logger logger = Logger.getLogger("Log");
+        FileHandler handler = null;
+
+        try {
+            handler = new FileHandler("file.log");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        handler.setFormatter(new SimpleFormatter());
+        logger.addHandler(handler );
 
         try (ServerSocket serverSocket = new ServerSocket(SERVER_PORT);) {
 
@@ -28,12 +41,12 @@ public class Server {
                 // client
                 clientSocket = serverSocket.accept();
 
-                System.out.println("Accepted connection request from client " + clientSocket.getInetAddress());
+                logger.info("Accepted connection request from client " + clientSocket.getLocalAddress());
 
                 // We want each client to be processed in a separate thread
                 // to keep the current thread free to accept() requests from new clients
 
-                ClientRequestHandler clientHandler = new ClientRequestHandler(clientSocket,requestExecutor);
+                ClientRequestHandler clientHandler = new ClientRequestHandler(clientSocket,requestExecutor, logger);
 
                 // uncomment the line below to launch a thread manually
                 // new Thread(clientHandler).start();

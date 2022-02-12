@@ -1,0 +1,40 @@
+фев 12, 2022 7:13:28 СЛ.ОБ. bg.sofia.uni.fmi.mjt.analyzer.Server main
+INFO: Accepted connection request from client /127.0.0.1
+фев 12, 2022 7:13:34 СЛ.ОБ. bg.sofia.uni.fmi.mjt.analyzer.ClientRequestHandler run
+INFO: Message received from /127.0.0.1 : <get-food Cheddar>
+фев 12, 2022 7:14:16 СЛ.ОБ. bg.sofia.uni.fmi.mjt.analyzer.ClientRequestHandler run
+INFO: Message received from /127.0.0.1 : <get-food-by-barcode --code=048707820026>
+фев 12, 2022 7:14:52 СЛ.ОБ. bg.sofia.uni.fmi.mjt.analyzer.ClientRequestHandler run
+INFO: Message received from /127.0.0.1 : <get-food-by-barcode --code=048707820023>
+фев 12, 2022 7:14:52 СЛ.ОБ. bg.sofia.uni.fmi.mjt.analyzer.ClientRequestHandler run
+SEVERE: Exception occurred when executing command <get-food-by-barcode --code=048707820023> FROM /127.0.0.1
+java.lang.RuntimeException: No foods found with gtinUpc code: 048707820023
+	at bg.sofia.uni.fmi.mjt.analyzer.api.FoodInfoReceiver.getFoodByBarcode(FoodInfoReceiver.java:41)
+	at bg.sofia.uni.fmi.mjt.analyzer.RequestExecutor.getGtinUpcByCode(RequestExecutor.java:92)
+	at bg.sofia.uni.fmi.mjt.analyzer.RequestExecutor.getFoodByBarcode(RequestExecutor.java:77)
+	at bg.sofia.uni.fmi.mjt.analyzer.RequestExecutor.execute(RequestExecutor.java:39)
+	at bg.sofia.uni.fmi.mjt.analyzer.ClientRequestHandler.run(ClientRequestHandler.java:39)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1136)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:635)
+	at java.base/java.lang.Thread.run(Thread.java:833)
+
+фев 12, 2022 7:15:18 СЛ.ОБ. bg.sofia.uni.fmi.mjt.analyzer.ClientRequestHandler run
+INFO: Message received from /127.0.0.1 : <get-food-by-barcode --code=048707820026>
+фев 12, 2022 7:15:53 СЛ.ОБ. bg.sofia.uni.fmi.mjt.analyzer.ClientRequestHandler run
+INFO: Message received from /127.0.0.1 : <get-food-by-barcode --code=048707820026 --img=barcode.gif>
+фев 12, 2022 7:16:10 СЛ.ОБ. bg.sofia.uni.fmi.mjt.analyzer.ClientRequestHandler run
+INFO: Message received from /127.0.0.1 : <get-food-by-barcode --img=barcode.gif>
+фев 12, 2022 7:16:10 СЛ.ОБ. bg.sofia.uni.fmi.mjt.analyzer.ClientRequestHandler run
+SEVERE: Exception occurred when executing command <get-food-by-barcode --img=barcode.gif> FROM /127.0.0.1
+java.lang.RuntimeException: No foods found with gtinUpc code: 725272730706
+	at bg.sofia.uni.fmi.mjt.analyzer.api.FoodInfoReceiver.getFoodByBarcode(FoodInfoReceiver.java:41)
+	at bg.sofia.uni.fmi.mjt.analyzer.RequestExecutor.getGtinUpcByImg(RequestExecutor.java:98)
+	at bg.sofia.uni.fmi.mjt.analyzer.RequestExecutor.getFoodByBarcode(RequestExecutor.java:75)
+	at bg.sofia.uni.fmi.mjt.analyzer.RequestExecutor.execute(RequestExecutor.java:39)
+	at bg.sofia.uni.fmi.mjt.analyzer.ClientRequestHandler.run(ClientRequestHandler.java:39)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1136)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:635)
+	at java.base/java.lang.Thread.run(Thread.java:833)
+
+фев 12, 2022 7:16:37 СЛ.ОБ. bg.sofia.uni.fmi.mjt.analyzer.ClientRequestHandler run
+INFO: /127.0.0.1 disconnected
