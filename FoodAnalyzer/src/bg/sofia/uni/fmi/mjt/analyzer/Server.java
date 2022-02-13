@@ -5,6 +5,8 @@ import bg.sofia.uni.fmi.mjt.analyzer.api.FoodInfoReceiver;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.logging.FileHandler;
@@ -19,9 +21,9 @@ public class Server {
         ExecutorService executor = Executors.newFixedThreadPool(MAX_EXECUTOR_THREADS);
         Logger logger = Logger.getLogger("Log");
         FileHandler handler = null;
-
+        String name = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss"));
         try {
-            handler = new FileHandler("file.log");
+            handler = new FileHandler("logs/" + name + ".log");
         } catch (IOException e) {
             e.printStackTrace();
         }

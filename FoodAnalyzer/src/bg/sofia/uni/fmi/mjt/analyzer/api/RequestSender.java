@@ -14,6 +14,9 @@ public class RequestSender {
     private static final String API_KEY = "AHaQ3LpwZIf4RWzqSYZ7AWuD726Ad69et0TPWHsJ";
 
     public static Response getFoodsByQuery(String query) {
+        if (query == null || query.isEmpty()) {
+            throw new IllegalArgumentException("Query cannot be null or empty");
+        }
         Response r = null;
         try {
             HttpClient client = HttpClient.newBuilder().build();
@@ -25,7 +28,7 @@ public class RequestSender {
 
             if (response.statusCode() != 200) {
                 ErrorResponse error = gson.fromJson(response.body(), ErrorResponse.class);
-                throw new RuntimeException(error.getMessage());
+                throw new RuntimeException(error.getError().getMessage());
             }
 
             r = gson.fromJson(response.body(), Response.class);
@@ -51,7 +54,7 @@ public class RequestSender {
 
             if (response.statusCode() != 200) {
                 ErrorResponse error = gson.fromJson(response.body(), ErrorResponse.class);
-                throw new RuntimeException(error.getMessage());
+                throw new RuntimeException(error.getError().getMessage());
             }
 
             res = gson.fromJson(response.body(), Food.class);

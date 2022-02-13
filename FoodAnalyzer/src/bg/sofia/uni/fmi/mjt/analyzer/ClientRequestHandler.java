@@ -42,6 +42,7 @@ public class ClientRequestHandler implements Runnable {
                         logger.info("No foods retrieved from command <" + inputLine + "> send FROM " + socket.getInetAddress());
                         out.println("No foods retrieved from command: " + inputLine);
                     } else {
+                        logger.info("Received response from command <" + inputLine + "> send FROM " + socket.getInetAddress());
                         String str = foods.stream().map(i -> i.toString()).collect(Collectors.joining("\n"));
                         out.println(str);
                     }

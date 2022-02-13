@@ -5,7 +5,7 @@ import bg.sofia.uni.fmi.mjt.analyzer.entity.Food;
 import java.util.List;
 
 public class Response {
-    private final List<Food> foods;
+    private List<Food> foods;
 
     public Response(List<Food> foods) {
         this.foods = foods;

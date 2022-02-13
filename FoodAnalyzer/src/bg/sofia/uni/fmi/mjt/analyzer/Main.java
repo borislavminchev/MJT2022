@@ -12,6 +12,8 @@ import java.net.URISyntaxException;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.logging.*;
 
@@ -43,12 +45,6 @@ public class Main {
 //        foods.stream().map(i -> i.toString()).forEach(System.out::println);
 
         //System.out.println(BarcodeReader.read("barcode.gif"));
-        Logger logger = Logger.getLogger("Log");
-        FileHandler handler = new FileHandler("file.log");
-        handler.setFormatter(new SimpleFormatter());
-        logger.addHandler(handler );
-        logger.info("Test");
-        logger.log(Level.SEVERE, "Exception was thrown", new RuntimeException("Some error occurred"));
 
     }
 }

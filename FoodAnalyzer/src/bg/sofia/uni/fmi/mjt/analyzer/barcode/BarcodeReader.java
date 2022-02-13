@@ -14,6 +14,9 @@ import java.io.InputStream;
 public class BarcodeReader {
 
     public static String read(String filePath) {
+        if (filePath == null || filePath.isEmpty()) {
+            throw new RuntimeException("File path cannot be null or empty string");
+        }
         Result result = null;
 
         try (InputStream barCodeInputStream = new FileInputStream(filePath)) {

@@ -32,6 +32,9 @@ public class FoodStorage {
     }
 
     public List<Food> getFoodsByGtinUpc(String gtinUpc) {
+        if (gtinUpc == null || gtinUpc.isEmpty()) {
+            throw new RuntimeException("GtinUpc code cannot be null or empty");
+        }
         return this.gtinUpcFoods.entrySet().stream()
                 .filter(i -> i.getKey().equals(gtinUpc))
                 .map(i -> i.getValue())

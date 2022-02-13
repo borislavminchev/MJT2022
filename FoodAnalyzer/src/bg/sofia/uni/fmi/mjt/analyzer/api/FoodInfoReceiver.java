@@ -6,7 +6,6 @@ import bg.sofia.uni.fmi.mjt.analyzer.storage.FoodStorage;
 import java.util.List;
 
 public class FoodInfoReceiver {
-    private static final String API_KEY = "AHaQ3LpwZIf4RWzqSYZ7AWuD726Ad69et0TPWHsJ";
     private final FoodStorage storage;
 
     public FoodInfoReceiver() {
@@ -36,6 +35,9 @@ public class FoodInfoReceiver {
     }
 
     public synchronized Response getFoodByBarcode(String gtinUpc) {
+        if (gtinUpc == null || gtinUpc.isEmpty()) {
+            throw new RuntimeException("GtinUpc code cannot be null or empty");
+        }
         List<Food> fromStorage = this.storage.getFoodsByGtinUpc(gtinUpc);
         if (fromStorage.isEmpty()) {
             throw new RuntimeException("No foods found with gtinUpc code: " + gtinUpc);
