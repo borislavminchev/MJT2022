@@ -1,6 +1,7 @@
 package bg.sofia.uni.fmi.mjt.analyzer;
 
-import bg.sofia.uni.fmi.mjt.analyzer.api.FoodInfoReceiver;
+import bg.sofia.uni.fmi.mjt.analyzer.api.DefaultFoodInfoReceiver;
+import bg.sofia.uni.fmi.mjt.analyzer.storage.DefaultFoodStorage;
 
 import java.io.IOException;
 import java.net.ServerSocket;
@@ -19,6 +20,8 @@ public class Server {
 
     public static void main(String[] args) {
         ExecutorService executor = Executors.newFixedThreadPool(MAX_EXECUTOR_THREADS);
+        RequestExecutor requestExecutor = new RequestExecutor(new DefaultFoodInfoReceiver(new DefaultFoodStorage()));
+
         Logger logger = Logger.getLogger("Log");
         FileHandler handler = null;
         String name = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss"));
@@ -33,27 +36,14 @@ public class Server {
         try (ServerSocket serverSocket = new ServerSocket(SERVER_PORT);) {
 
             System.out.println("Server started and listening for connect requests");
-            RequestExecutor requestExecutor = new RequestExecutor(new FoodInfoReceiver());
             Socket clientSocket;
 
             while (true) {
-
-                // Calling accept() blocks and waits for connection request by a client
-                // When a request comes, accept() returns a socket to communicate with this
-                // client
                 clientSocket = serverSocket.accept();
-
                 logger.info("Accepted connection request from client " + clientSocket.getLocalAddress());
 
-                // We want each client to be processed in a separate thread
-                // to keep the current thread free to accept() requests from new clients
-
-                ClientRequestHandler clientHandler = new ClientRequestHandler(clientSocket,requestExecutor, logger);
-
-                // uncomment the line below to launch a thread manually
-                // new Thread(clientHandler).start();
-
-                executor.execute(clientHandler); // use a thread pool to launch a thread
+                ClientRequestHandler clientHandler = new ClientRequestHandler(clientSocket, requestExecutor, logger);
+                executor.execute(clientHandler);
             }
         } catch (IOException e) {
             throw new RuntimeException("There is a problem with the server socket", e);

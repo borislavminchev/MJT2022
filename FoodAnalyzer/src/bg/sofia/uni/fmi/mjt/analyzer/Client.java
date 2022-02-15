@@ -29,7 +29,7 @@ public class Client {
 
                 System.out.println("Sending message <" + message + "> to the server...");
 
-                writer.println(message); // send the message to the server
+                writer.println(message);
 
                 String reply;
                 do {

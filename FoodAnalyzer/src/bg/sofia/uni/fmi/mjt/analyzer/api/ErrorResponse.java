@@ -1,15 +1,14 @@
 package bg.sofia.uni.fmi.mjt.analyzer.api;
 
-import bg.sofia.uni.fmi.mjt.analyzer.entity.Error;
 
 public class ErrorResponse {
-    private Error error;
+    private String message;
 
-    public ErrorResponse(Error error) {
-        this.error = error;
+    public ErrorResponse(String error) {
+        this.message = error;
     }
 
-    public Error getError() {
-        return error;
+    public String getError() {
+        return message;
     }
 }

@@ -6,15 +6,9 @@ import bg.sofia.uni.fmi.mjt.analyzer.barcode.BarcodeReader;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class RequestExecutor {
     private FoodInfoReceiver infoReceiver;
-
-//    get-food <food_name> (fdcId, description, gtinUpc)
-//    get-food-report <food_fdcId> (fdcId, description, gtinUpc, carbs, fats, protein, fiber, kcal)
-//    get-food-by-barcode --code=<gtinUpc_code>|--img=<barcode_image_file>
-
 
     public RequestExecutor(FoodInfoReceiver infoReceiver) {
         this.infoReceiver = infoReceiver;
@@ -25,18 +19,22 @@ public class RequestExecutor {
             throw new IllegalArgumentException("Command was null or empty");
         }
         String[] arguments = command.split("\\s+");
-        if (arguments[0].equals("get-food")) {
-            List<String> args = new ArrayList<>(List.of(arguments));
-            args.remove(0);
-            return getFood(args);
-        } else if (arguments[0].equals("get-food-report")) {
-            List<String> args = new ArrayList<>(List.of(arguments));
-            args.remove(0);
-            return getFoodReport(args);
-        } else if (arguments[0].equals("get-food-by-barcode")) {
-            List<String> args = new ArrayList<>(List.of(arguments));
-            args.remove(0);
-            return getFoodByBarcode(args);
+        switch (arguments[0]) {
+            case "get-food" -> {
+                List<String> args = new ArrayList<>(List.of(arguments));
+                args.remove(0);
+                return getFood(args);
+            }
+            case "get-food-report" -> {
+                List<String> args = new ArrayList<>(List.of(arguments));
+                args.remove(0);
+                return getFoodReport(args);
+            }
+            case "get-food-by-barcode" -> {
+                List<String> args = new ArrayList<>(List.of(arguments));
+                args.remove(0);
+                return getFoodByBarcode(args);
+            }
         }
 
         throw new RuntimeException("Command was not recognized:" + command);
@@ -46,7 +44,7 @@ public class RequestExecutor {
         if (args == null || args.isEmpty()) {
             throw new IllegalArgumentException("Args cannot be null or empty");
         }
-        String q = args.stream().collect(Collectors.joining(" "));
+        String q = String.join("%20", args);
         return infoReceiver.getFood(q);
     }
 
@@ -73,14 +71,14 @@ public class RequestExecutor {
         if (args.size() == 1) {
             if (arg1.startsWith("--img=")) {
                 return getGtinUpcByImg(arg1);
-            }else if (arg1.startsWith("--code=")) {
+            } else if (arg1.startsWith("--code=")) {
                 return getGtinUpcByCode(arg1);
             }
         } else {
             String arg2 = args.get(1);
             if (arg1.startsWith("--img=") && arg2.startsWith("--code=")) {
-                return getGtinUpcByImg(arg2);
-            }else if (arg2.startsWith("--img=") && arg1.startsWith("--code=")) {
+                return getGtinUpcByImg(arg1);
+            } else if (arg2.startsWith("--img=") && arg1.startsWith("--code=")) {
                 return getGtinUpcByCode(arg1);
             }
         }

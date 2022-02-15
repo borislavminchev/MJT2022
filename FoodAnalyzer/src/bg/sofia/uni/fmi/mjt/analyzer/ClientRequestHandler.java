@@ -9,10 +9,8 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.List;
-import java.util.logging.FileHandler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.logging.SimpleFormatter;
 import java.util.stream.Collectors;
 
 public class ClientRequestHandler implements Runnable {
@@ -39,15 +37,17 @@ public class ClientRequestHandler implements Runnable {
                     response = executor.execute(inputLine);
                     List<Food> foods = response.getFoods();
                     if (foods.isEmpty()) {
-                        logger.info("No foods retrieved from command <" + inputLine + "> send FROM " + socket.getInetAddress());
+                        logger.info("No foods retrieved from command <" + inputLine + "> send FROM " +
+                                socket.getInetAddress());
                         out.println("No foods retrieved from command: " + inputLine);
                     } else {
-                        logger.info("Received response from command <" + inputLine + "> send FROM " + socket.getInetAddress());
+                        logger.info("Received response from command <" + inputLine + "> send FROM " +
+                                socket.getInetAddress());
                         String str = foods.stream().map(i -> i.toString()).collect(Collectors.joining("\n"));
                         out.println(str);
                     }
                 } catch (Exception e) {
-                    logger.log(Level.SEVERE, "Exception occurred when executing command <"+ inputLine
+                    logger.log(Level.SEVERE, "Exception occurred when executing command <" + inputLine
                             + "> FROM " + socket.getInetAddress(), e);
                     out.println("Error occurred: " + e.getMessage());
                 }

@@ -1,0 +1,22 @@
+фев 14, 2022 7:27:37 СЛ.ОБ. bg.sofia.uni.fmi.mjt.analyzer.Server main
+INFO: Accepted connection request from client /127.0.0.1
+фев 14, 2022 7:27:47 СЛ.ОБ. bg.sofia.uni.fmi.mjt.analyzer.ClientRequestHandler run
+INFO: Message received from /127.0.0.1 : <get-food Cheddar Cheese>
+фев 14, 2022 7:27:49 СЛ.ОБ. bg.sofia.uni.fmi.mjt.analyzer.ClientRequestHandler run
+INFO: Received response from command <get-food Cheddar Cheese> send FROM /127.0.0.1
+фев 14, 2022 7:28:34 СЛ.ОБ. bg.sofia.uni.fmi.mjt.analyzer.ClientRequestHandler run
+INFO: Message received from /127.0.0.1 : <get-food Cheddar&pageNumber=-1>
+фев 14, 2022 7:28:34 СЛ.ОБ. bg.sofia.uni.fmi.mjt.analyzer.ClientRequestHandler run
+SEVERE: Exception occurred when executing command <get-food Cheddar&pageNumber=-1> FROM /127.0.0.1
+java.lang.RuntimeException: Page index must not be less than zero!
+	at bg.sofia.uni.fmi.mjt.analyzer.api.RequestSender.getFoodsByQuery(RequestSender.java:38)
+	at bg.sofia.uni.fmi.mjt.analyzer.api.DefaultFoodInfoReceiver.getFood(DefaultFoodInfoReceiver.java:19)
+	at bg.sofia.uni.fmi.mjt.analyzer.RequestExecutor.getFood(RequestExecutor.java:51)
+	at bg.sofia.uni.fmi.mjt.analyzer.RequestExecutor.execute(RequestExecutor.java:32)
+	at bg.sofia.uni.fmi.mjt.analyzer.ClientRequestHandler.run(ClientRequestHandler.java:39)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1136)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:635)
+	at java.base/java.lang.Thread.run(Thread.java:833)
+
+фев 14, 2022 7:28:45 СЛ.ОБ. bg.sofia.uni.fmi.mjt.analyzer.ClientRequestHandler run
+INFO: /127.0.0.1 disconnected

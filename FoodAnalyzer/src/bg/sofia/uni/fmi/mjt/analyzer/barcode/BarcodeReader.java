@@ -28,7 +28,7 @@ public class BarcodeReader {
             Reader reader = new MultiFormatReader();
             result = reader.decode(bitmap);
         } catch (Exception e) {
-            e.printStackTrace();
+            throw new RuntimeException(e.getMessage());
         }
 
         return result.getText();
