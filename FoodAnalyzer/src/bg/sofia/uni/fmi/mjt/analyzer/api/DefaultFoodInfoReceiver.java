@@ -1,11 +1,9 @@
 package bg.sofia.uni.fmi.mjt.analyzer.api;
 
 import bg.sofia.uni.fmi.mjt.analyzer.entity.Food;
-import bg.sofia.uni.fmi.mjt.analyzer.storage.DefaultFoodStorage;
 import bg.sofia.uni.fmi.mjt.analyzer.storage.FoodStorage;
 
 import java.util.List;
-import java.util.Set;
 
 public class DefaultFoodInfoReceiver implements FoodInfoReceiver {
     private final FoodStorage storage;

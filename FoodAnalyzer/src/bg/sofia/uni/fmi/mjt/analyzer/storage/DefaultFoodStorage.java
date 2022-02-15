@@ -2,10 +2,8 @@ package bg.sofia.uni.fmi.mjt.analyzer.storage;
 
 import bg.sofia.uni.fmi.mjt.analyzer.entity.Food;
 
-import java.lang.reflect.Array;
-import java.util.*;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
+import java.util.Map;
+import java.util.HashMap;
 
 public class DefaultFoodStorage implements FoodStorage {
 

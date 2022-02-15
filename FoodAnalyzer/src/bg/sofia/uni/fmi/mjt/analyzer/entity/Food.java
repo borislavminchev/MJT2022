@@ -1,8 +1,5 @@
 package bg.sofia.uni.fmi.mjt.analyzer.entity;
 
-import com.google.gson.annotations.SerializedName;
-
-import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
