@@ -40,7 +40,8 @@ public class Client {
             }
 
         } catch (IOException e) {
-            throw new RuntimeException("There is a problem with the network communication", e);
+            System.out.println("There is a problem with the network communication");
+            //throw new RuntimeException(, e);
         }
     }
 }

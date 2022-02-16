@@ -1,0 +1,34 @@
+фев 16, 2022 2:32:59 СЛ.ОБ. bg.sofia.uni.fmi.mjt.analyzer.Server main
+INFO: Accepted connection request from client /127.0.0.1
+фев 16, 2022 2:33:18 СЛ.ОБ. bg.sofia.uni.fmi.mjt.analyzer.ClientRequestHandler run
+INFO: Message received from /127.0.0.1 : <get-food Cheddar>
+фев 16, 2022 2:33:20 СЛ.ОБ. bg.sofia.uni.fmi.mjt.analyzer.ClientRequestHandler run
+INFO: Received response from command <get-food Cheddar> send FROM /127.0.0.1
+фев 16, 2022 2:34:12 СЛ.ОБ. bg.sofia.uni.fmi.mjt.analyzer.ClientRequestHandler run
+INFO: Message received from /127.0.0.1 : <get-food-report 2022017>
+фев 16, 2022 2:34:12 СЛ.ОБ. bg.sofia.uni.fmi.mjt.analyzer.ClientRequestHandler run
+INFO: Received response from command <get-food-report 2022017> send FROM /127.0.0.1
+фев 16, 2022 2:34:59 СЛ.ОБ. bg.sofia.uni.fmi.mjt.analyzer.ClientRequestHandler run
+INFO: Message received from /127.0.0.1 : <get-food-report 2022017>
+фев 16, 2022 2:34:59 СЛ.ОБ. bg.sofia.uni.fmi.mjt.analyzer.ClientRequestHandler run
+INFO: Received response from command <get-food-report 2022017> send FROM /127.0.0.1
+фев 16, 2022 2:35:42 СЛ.ОБ. bg.sofia.uni.fmi.mjt.analyzer.ClientRequestHandler run
+INFO: Message received from /127.0.0.1 : <get-food-by-barcode --code=048707820026>
+фев 16, 2022 2:35:42 СЛ.ОБ. bg.sofia.uni.fmi.mjt.analyzer.ClientRequestHandler run
+INFO: Received response from command <get-food-by-barcode --code=048707820026> send FROM /127.0.0.1
+фев 16, 2022 2:36:45 СЛ.ОБ. bg.sofia.uni.fmi.mjt.analyzer.ClientRequestHandler run
+INFO: Message received from /127.0.0.1 : <get-food-by-barcode --img=barcode.gif>
+фев 16, 2022 2:36:45 СЛ.ОБ. bg.sofia.uni.fmi.mjt.analyzer.ClientRequestHandler run
+SEVERE: Exception occurred when executing command <get-food-by-barcode --img=barcode.gif> FROM /127.0.0.1
+java.lang.RuntimeException: No foods found with gtinUpc code: 725272730706
+	at bg.sofia.uni.fmi.mjt.analyzer.api.DefaultFoodInfoReceiver.getFoodByBarcode(DefaultFoodInfoReceiver.java:57)
+	at bg.sofia.uni.fmi.mjt.analyzer.RequestExecutor.getGtinUpcByImg(RequestExecutor.java:96)
+	at bg.sofia.uni.fmi.mjt.analyzer.RequestExecutor.getFoodByBarcode(RequestExecutor.java:73)
+	at bg.sofia.uni.fmi.mjt.analyzer.RequestExecutor.execute(RequestExecutor.java:36)
+	at bg.sofia.uni.fmi.mjt.analyzer.ClientRequestHandler.run(ClientRequestHandler.java:39)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1136)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:635)
+	at java.base/java.lang.Thread.run(Thread.java:833)
+
+фев 16, 2022 2:37:37 СЛ.ОБ. bg.sofia.uni.fmi.mjt.analyzer.ClientRequestHandler run
+INFO: /127.0.0.1 disconnected

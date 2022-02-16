@@ -10,8 +10,8 @@ import java.net.http.HttpResponse;
 
 public class RequestSender {
     private static final String API_KEY = "AHaQ3LpwZIf4RWzqSYZ7AWuD726Ad69et0TPWHsJ";
-    private RequestSender() {
-    }
+
+
     public static Response getFoodsByQuery(String query) {
         if (query == null || query.isEmpty()) {
             throw new IllegalArgumentException("Query cannot be null or empty");
@@ -28,8 +28,7 @@ public class RequestSender {
 
             final int okCode = 200;
             if (response.statusCode() != okCode) {
-                ErrorResponse error = gson.fromJson(response.body(), ErrorResponse.class);
-                throw new RuntimeException(error.getError());
+                throw new RuntimeException(response.body());
             }
 
             r = gson.fromJson(response.body(), Response.class);
@@ -52,7 +51,7 @@ public class RequestSender {
 
             final int okCode = 200;
             if (response.statusCode() != okCode) {
-                throw new RuntimeException("Food with id: " + fdcId + " was not found or other problem occurred");
+                throw new RuntimeException(response.body());
             }
 
             res = gson.fromJson(response.body(), Food.class);

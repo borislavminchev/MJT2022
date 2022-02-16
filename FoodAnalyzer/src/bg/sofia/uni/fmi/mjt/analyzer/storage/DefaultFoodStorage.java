@@ -7,8 +7,8 @@ import java.util.HashMap;
 
 public class DefaultFoodStorage implements FoodStorage {
 
-    Map<Long, Food> foods;
-    Map<String, Food> gtinUpcFoods;
+    private Map<Long, Food> foods;
+    private Map<String, Food> gtinUpcFoods;
 
     public DefaultFoodStorage() {
         this.foods = new HashMap<>();
@@ -28,7 +28,7 @@ public class DefaultFoodStorage implements FoodStorage {
     @Override
     public void addFood(Food food) {
         if (food == null || !food.isValid()) {
-            throw new RuntimeException("Food is null or has invalid info");
+            throw new IllegalArgumentException("Food is null or has invalid info");
         }
 
         this.foods.put(food.getFdcId(), food);
@@ -45,7 +45,7 @@ public class DefaultFoodStorage implements FoodStorage {
     @Override
     public Food getFoodByGtinUpc(String gtinUpc) {
         if (gtinUpc == null || gtinUpc.isEmpty()) {
-            throw new RuntimeException("GtinUpc code cannot be null or empty");
+            throw new IllegalArgumentException("GtinUpc code cannot be null or empty");
         }
         return this.gtinUpcFoods.get(gtinUpc);
     }

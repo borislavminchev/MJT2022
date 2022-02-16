@@ -33,7 +33,7 @@ public class Server {
         handler.setFormatter(new SimpleFormatter());
         logger.addHandler(handler );
 
-        try (ServerSocket serverSocket = new ServerSocket(SERVER_PORT);) {
+        try (ServerSocket serverSocket = new ServerSocket(SERVER_PORT)) {
 
             System.out.println("Server started and listening for connect requests");
             Socket clientSocket;
